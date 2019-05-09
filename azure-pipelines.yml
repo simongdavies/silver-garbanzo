@@ -1,19 +1,22 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-- master
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - duffle/*
+    exclude:
+    -  duffle/README.md
 
 pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- bash: |
+  echo "Getting Duffle"
+  duffle_version="/0.1.0-ralpha.5%2Benglishrose"
+  curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  ${Agent.HomeDirectory}/duffle
+  chmod +x ${Agent.HomeDirectory}/duffle
+  echo "Testing Duffle Works"
+  duffle
+  displayName: 'Run duffle to build the bundle'
