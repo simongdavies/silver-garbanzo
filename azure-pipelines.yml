@@ -25,4 +25,5 @@ steps:
     echo PR Source Branch: $(System.PullRequest.SourceBranch)
     echo PR Number:  $(System.PullRequest.PullRequestNumber)
     echo Files:"https://api.github.com/repos/ $(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"
+    
   displayName: 'Run duffle to build the bundle'
