@@ -4,7 +4,11 @@ pr:
  branches:
   include:
   - master
-
+ paths:
+    include:
+    - duffle/*
+    exclude:
+    - docs/README.md
 pool:
   vmImage: 'Ubuntu-16.04'
 
@@ -24,6 +28,7 @@ steps:
     echo Build Provider: $(Build.Repository.Provider)
     echo PR Source Branch: $(System.PullRequest.SourceBranch)
     echo PR Number:  $(System.PullRequest.PullRequestNumber)
-    echo Files:"https://api.github.com/repos/ $(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"
-    
+    echo Files:"https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"
+    echo $(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files")|jq .
+    ls -al $(Build.Repository.LocalPath)
   displayName: 'Run duffle to build the bundle'
