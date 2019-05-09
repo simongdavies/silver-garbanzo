@@ -1,4 +1,4 @@
-ci: none
+trigger: none
 pr:
   paths:
     include:
