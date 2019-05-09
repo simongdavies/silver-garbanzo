@@ -1,5 +1,6 @@
 trigger: none
 pr:
+  - master
   paths:
     exclude:
     -  duffle/README.md
