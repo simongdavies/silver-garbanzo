@@ -1,7 +1,5 @@
+trigger: none
 pr:
-  branches:
-    include:
-    - master
   paths:
     include:
     - duffle/*
@@ -19,4 +17,11 @@ steps:
     chmod +x $(Agent.ToolsDirectory)/duffle
     echo "Testing Duffle Works"
     $(Agent.ToolsDirectory)/duffle
+    echo Is Fork: $(System.PullRequest.IsFork)
+    # Get PR Number $(System.PullRequest.PullRequestId) Not found for some reason
+    echo Build Source Branch: $(Build.SourceBranch)
+    echo Build Reason: $(Build.Reason)
+    echo Build Repository: $(Build.Repository.Name)
+    echo Build Provider: $(Build.Repository.Provider)
+    echo "PR Number":  $(System.PullRequest.PullRequestNumber)
   displayName: 'Run duffle to build the bundle'
