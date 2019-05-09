@@ -13,10 +13,10 @@ pool:
 
 steps:
 - bash: |
-  echo "Getting Duffle"
-  duffle_version="/0.1.0-ralpha.5%2Benglishrose"
-  curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  ${Agent.HomeDirectory}/duffle
-  chmod +x ${Agent.HomeDirectory}/duffle
-  echo "Testing Duffle Works"
-  duffle
+    echo "Getting Duffle"
+    duffle_version="/0.1.0-ralpha.5%2Benglishrose"
+    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  ${Agent.HomeDirectory}/duffle
+    chmod +x ${Agent.HomeDirectory}/duffle
+    echo "Testing Duffle Works"
+    duffle
   displayName: 'Run duffle to build the bundle'
