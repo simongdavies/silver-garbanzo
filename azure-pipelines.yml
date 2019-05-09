@@ -1,7 +1,5 @@
+ci: none
 pr:
-  branches:
-    include:
-    - master
   paths:
     include:
     - duffle/*
