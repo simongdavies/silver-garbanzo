@@ -3,9 +3,6 @@ pr:
  branches:
     include:
     - master
-paths:
-  exclude:
-  -  duffle/README.md
 
 pool:
   vmImage: 'Ubuntu-16.04'
