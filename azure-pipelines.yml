@@ -1,11 +1,8 @@
 trigger: none
 pr:
  branches:
-    include:
-    - master
- paths:
-   exclude:
-   -  duffle/README.md
+  include:
+  - master
 
 pool:
   vmImage: 'Ubuntu-16.04'
