@@ -29,6 +29,10 @@ steps:
     echo PR Source Branch: $(System.PullRequest.SourceBranch)
     echo PR Number:  $(System.PullRequest.PullRequestNumber)
     echo Files:"https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"
-    echo $(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files")|jq .
-    ls -al $(Build.Repository.LocalPath)
+    echo Folder:$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files")|jq [.[].filename| select(startswith("duffle"))][0]|split("/")[1]
+    folder=$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files")|jq [.[].filename| select(startswith("duffle"))][0]|split("/")[1]
+    echo Solution Directory: $(Build.Repository.LocalPath)/duffle/${folder}
+    cd $(Build.Repository.LocalPath)/duffle/${folder}
+    $(Agent.ToolsDirectory)/duffle init
+    $(Agent.ToolsDirectory)/duffle build
   displayName: 'Run duffle to build the bundle'
