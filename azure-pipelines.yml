@@ -23,5 +23,6 @@ steps:
     echo Build Reason: $(Build.Reason)
     echo Build Repository: $(Build.Repository.Name)
     echo Build Provider: $(Build.Repository.Provider)
-    echo "PR Number":  $(System.PullRequest.PullRequestNumber)
+    echo PR Source Branch: $(System.PullRequest.SourceBranch)
+    echo PR Number:  $(System.PullRequest.PullRequestNumber)
   displayName: 'Run duffle to build the bundle'
