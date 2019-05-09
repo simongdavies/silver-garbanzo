@@ -18,5 +18,5 @@ steps:
     curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  $(Agent.ToolsDirectory)/duffle
     chmod +x $(Agent.ToolsDirectory)/duffle
     echo "Testing Duffle Works"
-    duffle
+    $(Agent.ToolsDirectory)/duffle
   displayName: 'Run duffle to build the bundle'
