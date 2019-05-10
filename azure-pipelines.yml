@@ -15,6 +15,7 @@ pool:
 
 steps:
 - bash: $(Build.Repository.LocalPath)/build_bundle.sh
+  condition: eq(variables['Build.Reason'], 'PullRequest')
   env:
     agent_temp_directory: $(Agent.TempDirectory)
     repo_name: $(Build.Repository.Name)
