@@ -25,10 +25,22 @@ steps:
 
 - bash: $(Build.Repository.LocalPath)/build_bundle.sh
   workingDirectory: $(taskdir)
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+  env:
+    image_repo: $(image_repo)
   displayName: 'Run duffle to build and validate the bundle'
 
-- bash: $(Build.Repository.LocalPath)/publish_bundle.sh
-  workingDirectory: $(taskdir)
+- task: Docker@2
+  inputs:
+    command: login
+    containerRegistry: CNABRegistry
   condition: eq(variables['Build.Reason'], 'IndividualCI')
-  displayName: 'Publish Bundle on merge'
+  displayName: 'Docker Registry Login'
+
+- task: Docker@2
+  inputs:
+    command: push
+    containerRegistry: CNABRegistry
+    repository: $(image_repo)
+    tags: $(ii_tag)
+  condition: eq(variables['Build.Reason'], 'IndividualCI')
+  displayName: 'Docker Push'

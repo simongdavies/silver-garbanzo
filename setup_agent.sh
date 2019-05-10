@@ -36,9 +36,19 @@ if [ "${cnab_name}" != "${folder}" ]; then
     exit 1 
 fi
 
-registry=$(jq '.invocationImages.cnab.configuration.registry' ./duffle.json --raw-output) 
+# Find the Docker Builder 
+
+ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.json --raw-output) 
+
+# Check the registry name
+
+registry=$(jq ".invocationImages.${ii_name}}.configuration.registry" ./duffle.json --raw-output) 
 
 if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then 
     printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${repository}"
     exit 1 
 fi
+
+image_repo="${cnab_quickstart_registry}/${repository}/${cnab_name}-${ii_name}" 
+echo "Image Repo: ${image_repo}"
+echo "##vso[task.setvariable variable=image_repo]${image_repo}"
