@@ -42,6 +42,8 @@ ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.js
 
 # Check the registry name
 
+echo "registry: ${registry}"
+
 registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.json --raw-output) 
 
 if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then 
@@ -49,6 +51,6 @@ if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then
     exit 1 
 fi
 
-image_repo="${cnab_quickstart_registry}/${repository}/${cnab_name}-${ii_name}" 
+image_repo="${registry}/${cnab_name}-${ii_name}" 
 echo "Image Repo: ${image_repo}"
 echo "##vso[task.setvariable variable=image_repo]${image_repo}"
