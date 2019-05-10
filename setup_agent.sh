@@ -25,9 +25,11 @@ fi
 echo "Get the files in the PR or merge commit to find the solution folder name"
 
 if [ ${reason} == "IndividualCI" ]; then
-    echo "Source Branch: ${source_branch}"
-    echo "Repository URI: ${repo_uri}"
-    echo "SourceVersion: ${source_version}"
+    owner_and_repo="${repo_uri##https://github.com/}"
+    commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
+    echo "Merge Commit uri: ${commit_uri}"
+    echo $(curl "${commit_uri}"|jq '.')
+    folder=$(curl "${commit_uri}"|jq '[.files.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
 fi
 
 if [ ${reason} ==  "PullRequest" ]; then
