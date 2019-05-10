@@ -15,15 +15,18 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- bash: $(Build.Repository.LocalPath)/build_bundle.sh
-  condition: eq(variables['Build.Reason'], 'PullRequest')
+- bash: $(Build.Repository.LocalPath)/setup_agent.sh
   env:
     agent_temp_directory: $(Agent.TempDirectory)
     repo_name: $(Build.Repository.Name)
     pr_number: $(System.PullRequest.PullRequestNumber)
     repo_local_path: $(Build.SourcesDirectory)
+  displayName: 'Set Up Agent'
+
+- bash: $(Build.Repository.LocalPath)/build_bundle.sh
+  condition: eq(variables['Build.Reason'], 'PullRequest')
   displayName: 'Run duffle to build and validate the bundle'
 
-- bash: echo $(Build.Reason)
+- bash: $(Build.Repository.LocalPath)/publish_bundle.sh
   condition: eq(variables['Build.Reason'], 'IndividualCI')
-  displayName: 'Build Reason'
+  displayName: 'Publish Bundle on merge'
