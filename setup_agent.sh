@@ -28,7 +28,7 @@ if [ ${reason} == "IndividualCI" ]; then
     owner_and_repo="${repo_uri##https://github.com/}"
     commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
     echo "Merge Commit uri: ${commit_uri}"
-    echo $(curl "${commit_uri}"|jq '.')
+    echo commit: $(curl "${commit_uri}")|jq '.'
     folder=$(curl "${commit_uri}"|jq '[.files.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
 fi
 
