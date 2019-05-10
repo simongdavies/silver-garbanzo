@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e 
 duffle_version="/0.1.0-ralpha.5%2Benglishrose"
@@ -15,8 +15,6 @@ chmod +x "${agent_temp_directory}/duffle/duffle"
 
 echo "##vso[task.setvariable variable=PATH]${agent_temp_directory}/duffle:${PATH}"
 
-echo "Get the files in the PR to find the solution folder name"
-
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
 if [ "$(find "${repo_local_path}/duffle" -maxdepth 1 ! -type d)" ]; then 
@@ -24,7 +22,19 @@ if [ "$(find "${repo_local_path}/duffle" -maxdepth 1 ! -type d)" ]; then
     exit 1 
 fi
 
-folder=$(curl "https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
+echo "Get the files in the PR or merge commit to find the solution folder name"
+
+if [ $(Build.Reason) == "IndividualCI" ]; then
+    echo "Source Branch: $(Build.SourceBranch)"
+    echo "Source Branch Id: $(Build.SourceBranch)"
+    echo "Repository URI: $(Build.Repository.Uri)"
+    echo "SourceVersion: $(Build.SourceVersion)"
+fi
+
+if [ $(Build.Reason) == "IndividualCI" ]; then
+    folder=$(curl "https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
+fi 
+
 echo "##vso[task.setvariable variable=taskdir]${repo_local_path}/duffle/${folder}"
 
 cd "${repo_local_path}/duffle/${folder}"
@@ -42,9 +52,9 @@ ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.js
 
 # Check the registry name
 
-echo "registry: ${registry}"
-
 registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.json --raw-output) 
+
+echo "registry: ${registry}"
 
 if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then 
     printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${repository}"
