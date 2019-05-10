@@ -24,14 +24,13 @@ fi
 
 echo "Get the files in the PR or merge commit to find the solution folder name"
 
-if [ $(Build.Reason) == "IndividualCI" ]; then
-    echo "Source Branch: $(Build.SourceBranch)"
-    echo "Source Branch Id: $(Build.SourceBranch)"
-    echo "Repository URI: $(Build.Repository.Uri)"
-    echo "SourceVersion: $(Build.SourceVersion)"
+if [ ${reason} == "IndividualCI" ]; then
+    echo "Source Branch: ${source_branch}"
+    echo "Repository URI: ${repo_uri}"
+    echo "SourceVersion: ${source_version}"
 fi
 
-if [ $(Build.Reason) == "IndividualCI" ]; then
+if [ ${reason} ==  "PullRequest" ]; then
     folder=$(curl "https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
 fi 
 
