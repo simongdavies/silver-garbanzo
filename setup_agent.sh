@@ -42,7 +42,7 @@ ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.js
 
 # Check the registry name
 
-registry=$(jq ".invocationImages.${ii_name}}.configuration.registry" ./duffle.json --raw-output) 
+registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.json --raw-output) 
 
 if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then 
     printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${repository}"
