@@ -25,4 +25,5 @@ steps:
   displayName: 'Run duffle to build and validate the bundle'
 
 - bash: echo $(Build.Reason)
+  condition: eq(variables['Build.Reason'], 'IndividualCI')
   displayName: 'Build Reason'
