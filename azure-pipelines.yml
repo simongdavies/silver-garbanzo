@@ -31,6 +31,7 @@ steps:
   workingDirectory: $(taskdir)
   env:
     image_repo: $(image_repo)
+    image_registry: $(image_registry)
   displayName: 'Run duffle to build and validate the bundle'
 
 - task: Docker@2
