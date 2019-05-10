@@ -3,7 +3,7 @@
 set -e 
 duffle_version="/0.1.0-ralpha.5%2Benglishrose"
 cnab_quickstart_registry="sdacr.azurecr.io"
-repository="duffle"
+repository_path="duffle"
 
 echo "Download Duffle"
 
@@ -56,11 +56,12 @@ registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.jso
 
 echo "registry: ${registry}"
 
-if [ "${registry}" != "${cnab_quickstart_registry}/${repository}" ]; then 
-    printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${repository}"
+if [ "${registry}" != "${cnab_quickstart_registry}/${repository_path}" ]; then 
+    printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${repository_path}"
     exit 1 
 fi
 
-image_repo="${registry}/${cnab_name}-${ii_name}" 
-echo "Image Repo: ${image_repo}"
+image_repo="${repository_path}/${cnab_name}-${ii_name}" 
+echo "image_repo: ${image_repo}"
 echo "##vso[task.setvariable variable=image_repo]${image_repo}"
+echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}"
