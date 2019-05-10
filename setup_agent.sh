@@ -11,7 +11,7 @@ chmod +x ${agent_temp_directory}/duffle/duffle
 
 # Update the path
 
-echo "##vso[task.setvariable variable=PATH]PATH=${agent_temp_directory}/duffle:${PATH}"
+echo "##vso[task.setvariable variable=PATH]${agent_temp_directory}/duffle:${PATH}"
 
 echo "Get the files in the PR to find the solution folder name"
 
