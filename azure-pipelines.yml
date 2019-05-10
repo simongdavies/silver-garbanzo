@@ -9,6 +9,7 @@ pr:
     - duffle/*
     exclude:
     - docs/README.md
+    
 pool:
   vmImage: 'Ubuntu-16.04'
 
