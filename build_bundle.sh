@@ -7,7 +7,7 @@ echo "Download Duffle"
 
 mkdir ${agent_temp_directory}/duffle
 curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  ${agent_temp_directory}/duffle/duffle
-chmod +x ${agent_temp_directory}/duffle
+chmod +x ${agent_temp_directory}/duffle/duffle
 export PATH=${agent_temp_directory}/duffle:${PATH}
 
 echo "Get the files in the PR to find the solution folder name"
