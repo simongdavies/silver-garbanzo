@@ -1,4 +1,5 @@
-trigger: none
+trigger:
+- master
 
 pr:
  branches:
@@ -22,3 +23,6 @@ steps:
     pr_number: $(System.PullRequest.PullRequestNumber)
     repo_local_path: $(Build.SourcesDirectory)
   displayName: 'Run duffle to build and validate the bundle'
+
+- bash: echo $(Build.Reason)
+  displayName: 'Build Reason'
