@@ -14,7 +14,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- bash: $(Build.Repository.LocalPath)/duffle/build_bundle.sh
+- bash: $(Build.Repository.LocalPath)/build_bundle.sh
   env:
     agent_temp_directory: $(Agent.TempDirectory)
     repo_name: $(Build.Repository.Name)
