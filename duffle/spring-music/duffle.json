@@ -1,0 +1,71 @@
+{
+    "name": "spring-music",
+    "version": "0.1.0",
+    "description": "A short description of your bundle",
+    "maintainers": [
+      {
+          "name": "Brian Redmond",
+          "email": "brianisrunning@gmail.com"
+      },
+      {
+          "name": "Joey Schluchter",
+          "email": "joey@gmail.com"
+      }
+  ],
+    "invocationImages": {
+        "cnab": {
+            "name": "cnab",
+            "builder": "docker",
+            "configuration": {
+                "registry": "chzbrgr71"
+            }
+        }
+    },
+    "parameters": {
+      "cluster_name": {
+        "defaultValue": "briar-aks-cnab-demo-5",
+        "type": "string",
+        "destination": {
+          "env": "CLUSTER_NAME"
+        }
+      },
+      "aks_resource_group": {
+        "defaultValue": "cnab-bundle-demo50",
+        "type": "string",
+        "destination": {
+          "env": "AKS_RESOURCE_GROUP"
+        }
+      },
+      "app_resource_group": {
+        "defaultValue": "cnab-bundle-demo50",
+        "type": "string",
+        "destination": {
+          "env": "APP_RESOURCE_GROUP"
+        }
+      },
+      "cosmosdb_service_name": {
+        "defaultValue": "briarmusic250",
+        "type": "string",
+        "destination": {
+          "env": "COSMOSDB_SERVICE_NAME"
+        }
+      },
+      "cosmosdb_location": {
+        "defaultValue": "eastus",
+        "type": "string",
+        "destination": {
+          "env": "LOCATION"
+        }
+      }
+    },
+    "credentials": {
+      "CLIENT_ID":
+        {"env":"AZURE_CLIENT_ID"},
+      "CLIENT_SECRET":
+        {"env":"AZURE_CLIENT_SECRET"},
+      "SUBSCRIPTION_ID":
+        {"env":"AZURE_SUBSCRIPTION_ID"},
+      "TENANT_ID":
+        {"env":"AZURE_TENANT_ID"}
+    }
+}
