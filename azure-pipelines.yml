@@ -13,26 +13,5 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- bash: |
-    echo "Getting Duffle"
-    duffle_version="/0.1.0-ralpha.5%2Benglishrose"
-    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  $(Agent.ToolsDirectory)/duffle
-    chmod +x $(Agent.ToolsDirectory)/duffle
-    echo "Testing Duffle Works"
-    $(Agent.ToolsDirectory)/duffle
-    echo Is Fork: $(System.PullRequest.IsFork)
-    # Get PR Number $(System.PullRequest.PullRequestId) Not found for some reason
-    echo Build Source Branch: $(Build.SourceBranch)
-    echo Build Reason: $(Build.Reason)
-    echo Build Repository: $(Build.Repository.Name)
-    echo Build Provider: $(Build.Repository.Provider)
-    echo PR Source Branch: $(System.PullRequest.SourceBranch)
-    echo PR Number:  $(System.PullRequest.PullRequestNumber)
-    echo Files:"https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"
-    echo Folder:$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
-    folder=$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
-    echo Solution Directory: $(Build.Repository.LocalPath)/duffle/${folder}
-    cd $(Build.Repository.LocalPath)/duffle/${folder}
-    $(Agent.ToolsDirectory)/duffle init
-    $(Agent.ToolsDirectory)/duffle build
-  displayName: 'Run duffle to build the bundle'
+- bash: $(Build.Repository.LocalPath)/duffle/build_bundle.sh
+  displayName: 'Run duffle to build and validate the bundle'
