@@ -19,5 +19,5 @@ steps:
     agent_temp_directory: $(Agent.TempDirectory)
     repo_name: $(Build.Repository.Name)
     pr_number: $(System.PullRequest.PullRequestNumber)
-    repo_local_path: $(Build.Repository.LocalPath)
+    repo_local_path: $(Build.SourcesDirectory)
   displayName: 'Run duffle to build and validate the bundle'
