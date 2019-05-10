@@ -14,7 +14,7 @@ echo "Get the files in the PR to find the solution folder name"
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
-folder=$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files")|jq [.[].filename| select(startswith("duffle"))][0]|split("/")[1]
+folder=$(curl "https://api.github.com/repos/$(Build.Repository.Name)/pulls/$(System.PullRequest.PullRequestNumber)/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
 echo "Building Bundle in Solution Directory: $(Build.Repository.LocalPath)/duffle/${folder}"
 cd $(Build.Repository.LocalPath)/duffle/${folder}
 
