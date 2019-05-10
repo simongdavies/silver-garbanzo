@@ -15,4 +15,6 @@ pool:
 
 steps:
 - bash: $(Build.Repository.LocalPath)/duffle/build_bundle.sh
+  env:
+    agent_temp_directory: $(Agent.TempDirectory)
   displayName: 'Run duffle to build and validate the bundle'
