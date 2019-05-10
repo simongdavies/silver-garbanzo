@@ -23,5 +23,4 @@ if [ "$(find "${repo_local_path}/duffle" -maxdepth 1 ! -type d)" ]; then
 fi
 
 folder=$(curl "https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"|jq '[.[].filename| select(startswith("duffle"))][0]|split("/")[1]' --raw-output) 
-echo "Building Bundle in Solution Directory: ${repo_local_path}/duffle/${folder}"
-cd "${repo_local_path}/duffle/${folder}"
+echo "##vso[task.setvariable variable=taskdir]${repo_local_path}/duffle/${folder}"
