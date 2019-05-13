@@ -13,7 +13,7 @@ chmod +x "${agent_temp_directory}/duffle/duffle"
 
 # Update the path
 
-echo "##vso[task.setvariable variable=PATH]${agent_temp_directory}/duffle:${PATH}"
+echo '##vso[task.prependpath]${agent_temp_directory}/duffle'
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
