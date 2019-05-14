@@ -31,7 +31,7 @@ printf "tool:%s\\n" "${tool}"
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
 if [ "${tool}" ]; then
-    folder=$(echo "${files}"|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[0]' --raw-output)
+    folder=$(echo "${files}"|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[1]' --raw-output)
     echo "##vso[task.setvariable variable=tool]${tool}"
 fi
 
@@ -44,7 +44,7 @@ if [ "${folder}" ]; then
     fi
 fi
 
-if [ "${folder}" == "duffle" ]; then
+if [ "${tool}" == "duffle" ]; then
 
     echo "Download Duffle"
 
@@ -56,7 +56,7 @@ if [ "${folder}" == "duffle" ]; then
 
     echo '##vso[task.prependpath]${agent_temp_directory}/duffle'
 
-    cd "${repo_local_path}/duffle}"
+    cd "${repo_local_path}/duffle/${folder}}"
 
     cnab_name=$(jq '.name' ./duffle.json --raw-output) 
 
@@ -89,7 +89,7 @@ fi
 
 # Download porter
 
-if [ "${folder}" == "porter" ]; then
+if [ "${tool}" == "porter" ]; then
     PORTER_HOME=~/.porter
     PORTER_URL=https://cdn.deislabs.io/porter
     PORTER_VERSION=${PORTER_VERSION:-latest}
