@@ -19,24 +19,28 @@ fi
 if [ ${reason} == "PullRequest" ]; then
     pr_uri="https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"
     echo "PR uri: ${pr_uri}"
-    files=$(curl "${pr_uri}"|jq '[.[].filename|') 
+    files=$(curl "${pr_uri}"|jq '[.[].filename]') 
 fi
 
 printf "file:\n%s" "${files}"
 
-tool=$(echo ${files}|jq '.|map(select(contains("/")))[0]|split("/")[0]')
+tool=$(echo ${files}|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end')
 
 echo "tool: ${tool}"
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
-folder=$(echo ${files}|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[0]' --raw-output)
+if [ ${tool} ]; then
+    folder=$(echo ${files}|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[0]' --raw-output)
+fi
 
 echo "folder: ${folder}"
 
-if [ "$(find "${repo_local_path}/duffle" -maxdepth 1 ! -type d)" ]; then 
-    printf "Files should not be placed in the duffle directory - only duffle solution folders in this folder"
-    exit 1 
+if [ ${folder} ]; then
+    if [ "$(find "${repo_local_path}/${folder}" -maxdepth 1 ! -type d)" ]; then 
+        printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \n" "${folder}" "${folder}"
+        exit 1 
+    fi
 fi
 
 if [ ${folder} == "duffle" ]; then
