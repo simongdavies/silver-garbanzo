@@ -90,7 +90,28 @@ fi
 # Download porter
 
 if [ "${folder}" == "porter" ]; then
-    curl https://deislabs.blob.core.windows.net/porter/latest/install-linux.sh | bash
+    PORTER_HOME=~/.porter
+    PORTER_URL=https://cdn.deislabs.io/porter
+    PORTER_VERSION=${PORTER_VERSION:-latest}
+    echo "Installing porter to $PORTER_HOME"
+
+    mkdir -p $PORTER_HOME
+
+    curl -fsSLo $PORTER_HOME/porter $PORTER_URL/$PORTER_VERSION/porter-linux-amd64
+    chmod +x $PORTER_HOME/porter
+    cp $PORTER_HOME/porter $PORTER_HOME/porter-runtime
+    echo Installed `$PORTER_HOME/porter version`
+
+    FEED_URL=$PORTER_URL/atom.xml
+    $PORTER_HOME/porter mixin install exec --version $PORTER_VERSION --feed-url $FEED_URL
+    $PORTER_HOME/porter mixin install kubernetes --version $PORTER_VERSION --feed-url $FEED_URL
+    $PORTER_HOME/porter mixin install helm --version $PORTER_VERSION --feed-url $FEED_URL
+    $PORTER_HOME/porter mixin install azure --version $PORTER_VERSION --feed-url $FEED_URL
+
+    echo "Installation complete."
+    echo "Add porter to your path by running:"
+    echo "export PATH=\$PATH:~/.porter"
+
     build_required=true
 fi
 

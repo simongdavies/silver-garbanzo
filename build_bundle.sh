@@ -2,10 +2,11 @@
 
 set -e 
 
-echo "Building Bundle in Solution Directory: $(pwd)"
-
-duffle init
-duffle build
+echo "Building Bundle in Solution Directory: $(pwd) using ${tool}"
+if [ "${tool}" == "duffle" ]; then
+    duffle init
+    duffle build
+fi
 
 ii_tag="$(docker image ls ${image_registry}/${image_repo} --format='{{lower .Tag}}')"
 echo "Invocation Image Tag: ${ii_tag}"

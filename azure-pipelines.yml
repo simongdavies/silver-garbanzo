@@ -31,10 +31,11 @@ steps:
 - bash: $(Build.Repository.LocalPath)/build_bundle.sh
   workingDirectory: $(taskdir)
   env:
+    tool: $(tool)
     image_repo: $(image_repo)
     image_registry: $(image_registry)
   condition: and(succeeded(),eq(variables.BuildRequired, 'true'))
-  displayName: 'Run duffle to build and validate the bundle'
+  displayName: 'Run builder tool to build and validate the bundle'
 
 - task: Docker@2
   inputs:
