@@ -56,7 +56,7 @@ if [ "${tool}" == "duffle" ]; then
 
     echo '##vso[task.prependpath]${agent_temp_directory}/duffle'
 
-    cd "${repo_local_path}/duffle/${folder}}"
+    cd "${repo_local_path}/duffle/${folder}"
 
     cnab_name=$(jq '.name' ./duffle.json --raw-output) 
 
