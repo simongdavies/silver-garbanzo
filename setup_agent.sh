@@ -9,46 +9,47 @@ build_required=false
 
 echo "Get the files in the PR or merge commit to find the solution folder name"
 
-if [ ${reason} == "IndividualCI" ]; then
+if [ "${reason}" == "IndividualCI" ]; then
     owner_and_repo="${repo_uri##https://github.com/}"
     commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
     echo "Merge Commit uri: ${commit_uri}"
     files=$(curl "${commit_uri}"|jq '[.files[].filename]') 
 fi
 
-if [ ${reason} == "PullRequest" ]; then
+if [ "${reason}" == "PullRequest" ]; then
     pr_uri="https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"
     echo "PR uri: ${pr_uri}"
     files=$(curl "${pr_uri}"|jq '[.[].filename]') 
 fi
 
-printf "file:\n%s" "${files}"
+printf "file:\\n%s\\n" "${files}"
 
-tool=$(echo ${files}|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end')
+tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end')
 
-echo "tool: ${tool}"
+printf "tool:%s\\n" "${tool}"
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
-if [ ${tool} ]; then
-    folder=$(echo ${files}|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[0]' --raw-output)
+if [ "${tool}" ]; then
+    folder=$(echo "${files}"|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[0]' --raw-output)
+    echo "##vso[task.setvariable variable=tool]${tool}"
 fi
 
-echo "folder: ${folder}"
+printf "folder:%s\\n" "${folder}"
 
-if [ ${folder} ]; then
+if [ "${folder}" ]; then
     if [ "$(find "${repo_local_path}/${folder}" -maxdepth 1 ! -type d)" ]; then 
-        printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \n" "${folder}" "${folder}"
+        printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${folder}" "${folder}"
         exit 1 
     fi
 fi
 
-if [ ${folder} == "duffle" ]; then
+if [ "${folder}" == "duffle" ]; then
 
     echo "Download Duffle"
 
     mkdir "${agent_temp_directory}/duffle"
-    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  ${agent_temp_directory}/duffle/duffle
+    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  "${agent_temp_directory}/duffle/duffle"
     chmod +x "${agent_temp_directory}/duffle/duffle"
 
     # Update the path
@@ -87,5 +88,10 @@ if [ ${folder} == "duffle" ]; then
 fi
 
 # Download porter
+
+if [ "${folder}" == "porter" ]; then
+    curl https://deislabs.blob.core.windows.net/porter/latest/install-linux.sh | bash
+    build_required=true
+fi
 
  echo "##vso[task.setvariable variable=BuildRequired]${build_required}"
