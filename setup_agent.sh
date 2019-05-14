@@ -31,18 +31,15 @@ printf "tool:%s\\n" "${tool}"
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
 if [ "${tool}" ]; then
+    if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d)" ]; then 
+        printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${tool}" "${tool}"
+        exit 1 
+    fi
     folder=$(echo "${files}"|jq --arg tool "${tool}" '.|map(select(startswith($tool)))[0]|split("/")[1]' --raw-output)
     echo "##vso[task.setvariable variable=tool]${tool}"
 fi
 
 printf "folder:%s\\n" "${folder}"
-
-if [ "${folder}" ]; then
-    if [ "$(find "${repo_local_path}/${folder}" -maxdepth 1 ! -type d)" ]; then 
-        printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${folder}" "${folder}"
-        exit 1 
-    fi
-fi
 
 if [ "${tool}" == "duffle" ]; then
 
@@ -69,14 +66,16 @@ if [ "${tool}" == "duffle" ]; then
 
     ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.json --raw-output) 
 
+    echo "ii_name: ${ii_name}"
+
     # Check the registry name
 
     registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.json --raw-output) 
 
     echo "registry: ${registry}"
 
-    if [ "${registry}" != "${cnab_quickstart_registry}/${folder}" ]; then 
-        printf "Registry property of invocation image configuration should be set to %s in duffle.json" "${cnab_quickstart_registry}/${folder}"
+    if [ "${registry}" != "${cnab_quickstart_registry}/${tool}" ]; then 
+        printf "Registry property of invocation image configuration should be set to %s in duffle.json\\n" "${cnab_quickstart_registry}/${tool}"
         exit 1 
     fi
 
