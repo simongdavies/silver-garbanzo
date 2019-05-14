@@ -51,7 +51,7 @@ if [ "${tool}" == "duffle" ]; then
 
     # Update the path
 
-    echo '##vso[task.prependpath]${agent_temp_directory}/duffle'
+    echo "##vso[task.prependpath]${agent_temp_directory}/duffle"
 
     cd "${repo_local_path}/duffle/${folder}"
     
