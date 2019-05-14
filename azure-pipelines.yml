@@ -32,13 +32,14 @@ steps:
   env:
     image_repo: $(image_repo)
     image_registry: $(image_registry)
+  condition: succeeded()
   displayName: 'Run duffle to build and validate the bundle'
 
 - task: Docker@2
   inputs:
     command: login
     containerRegistry: CNABRegistry
-  condition: eq(variables['Build.Reason'], 'IndividualCI')
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'))
   displayName: 'Docker Registry Login'
 
 - task: Docker@2
@@ -47,5 +48,5 @@ steps:
     containerRegistry: CNABRegistry
     repository: $(image_repo)
     tags: $(ii_tag)
-  condition: eq(variables['Build.Reason'], 'IndividualCI')
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'))
   displayName: 'Docker Push'
