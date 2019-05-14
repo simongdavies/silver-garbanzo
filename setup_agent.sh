@@ -54,6 +54,8 @@ if [ "${tool}" == "duffle" ]; then
     echo '##vso[task.prependpath]${agent_temp_directory}/duffle'
 
     cd "${repo_local_path}/duffle/${folder}"
+    
+    echo "##vso[task.setvariable variable=taskdir]${repo_local_path}/duffle/${folder}"
 
     cnab_name=$(jq '.name' ./duffle.json --raw-output) 
 
@@ -79,7 +81,7 @@ if [ "${tool}" == "duffle" ]; then
         exit 1 
     fi
 
-    image_repo="${folder}/${cnab_name}-${ii_name}" 
+    image_repo="${cnab_name}-${ii_name}" 
     echo "image_repo: ${image_repo}"
     echo "##vso[task.setvariable variable=image_repo]${image_repo}"
     echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}"
