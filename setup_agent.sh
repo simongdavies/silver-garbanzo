@@ -24,7 +24,7 @@ fi
 
 printf "file:\\n%s\\n" "${files}"
 
-tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end')
+tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)
 
 printf "tool:%s\\n" "${tool}"
 
