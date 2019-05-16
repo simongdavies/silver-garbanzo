@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e 
 duffle_version="/0.1.0-ralpha.5%2Benglishrose"
 cnab_quickstart_registry="sdacr.azurecr.io"
@@ -41,39 +40,41 @@ fi
 
 printf "folder:%s\\n" "${folder}"
 
+# Duffle based solution
+
 if [ "${tool}" == "duffle" ]; then
 
-    echo "Download Duffle"
+    echo "Downloading Duffle"
 
     mkdir "${agent_temp_directory}/duffle"
-    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -L -o  "${agent_temp_directory}/duffle/duffle"
+    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -fLo "${agent_temp_directory}/duffle/duffle"
     chmod +x "${agent_temp_directory}/duffle/duffle"
+
+    echo "Downloaded Duffle"
 
     # Update the path
 
     echo "##vso[task.prependpath]${agent_temp_directory}/duffle"
-
-    cd "${repo_local_path}/duffle/${folder}"
-    
     echo "##vso[task.setvariable variable=taskdir]${repo_local_path}/duffle/${folder}"
 
+    cd "${repo_local_path}/duffle/${folder}"
+   
     cnab_name=$(jq '.name' ./duffle.json --raw-output) 
+    echo "CNAB Name:${cnab_name}"
 
     if [ "${cnab_name}" != "${folder}" ]; then 
-        printf "Name property should in duffle.json should be the same as the solution directory name. Name property:%s Directory Name: %s" "${cnab_name}" "${folder}"
+        printf "Name property should in duffle.json should be the same as the solution directory name. Name property:%s Directory Name: %s\\n" "${cnab_name}" "${folder}"
         exit 1 
     fi
 
     # Find the Docker Builder 
 
     ii_name=$(jq '.invocationImages|.[]|select(.builder=="docker").name' ./duffle.json --raw-output) 
-
     echo "ii_name: ${ii_name}"
 
     # Check the registry name
 
     registry=$(jq ".invocationImages.${ii_name}.configuration.registry" ./duffle.json --raw-output) 
-
     echo "registry: ${registry}"
 
     if [ "${registry}" != "${cnab_quickstart_registry}/${tool}" ]; then 
@@ -83,37 +84,78 @@ if [ "${tool}" == "duffle" ]; then
 
     image_repo="${cnab_name}-${ii_name}" 
     echo "image_repo: ${image_repo}"
+
     echo "##vso[task.setvariable variable=image_repo]${image_repo}"
     echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
     build_required=true
 fi
 
-# Download porter
+# Porter Solution
 
 if [ "${tool}" == "porter" ]; then
-    PORTER_HOME=~/.porter
-    PORTER_URL=https://cdn.deislabs.io/porter
-    PORTER_VERSION=${PORTER_VERSION:-latest}
-    echo "Installing porter to $PORTER_HOME"
+    porter_home="${agent_temp_directory}/porter"
+    porter_url=https://cdn.deislabs.io/porter
+    porter_version="${porter_version:-latest}"
+    feed_url="${porter_url}/atom.xml"
+    
+    echo "Installing porter to ${porter_home}"
+    mkdir -p "${porter_home}"
+    curl -fLo "${porter_home}/porter ${porter_url}/${porter_version}/porter-linux-amd64"
+    chmod +x "${porter_home}/porter"
+    cp "${porter_home}/porter" "${porter_home}/porter-runtime"
+    echo Installed "$("${porter_home}/porter" version)"
 
-    mkdir -p $PORTER_HOME
+    echo "Installing mixins"
+    "${porter_home}/porter" mixin install exec --version "${porter_version}" --feed-url "${feed_url}"
+    "${porter_home}/porter" mixin install kubernetes --version "${porter_version}" --feed-url "${feed_url}"
+    "${porter_home}/porter" mixin install helm --version "${porter_version}" --feed-url "${feed_url}"
+    "${porter_home}/porter" mixin install azure --version "${porter_version}" --feed-url "${feed_url}"
+    echo "Installed mixins"
 
-    curl -fsSLo $PORTER_HOME/porter $PORTER_URL/$PORTER_VERSION/porter-linux-amd64
-    chmod +x $PORTER_HOME/porter
-    cp $PORTER_HOME/porter $PORTER_HOME/porter-runtime
-    echo Installed `$PORTER_HOME/porter version`
+    # Update the path
 
-    FEED_URL=$PORTER_URL/atom.xml
-    $PORTER_HOME/porter mixin install exec --version $PORTER_VERSION --feed-url $FEED_URL
-    $PORTER_HOME/porter mixin install kubernetes --version $PORTER_VERSION --feed-url $FEED_URL
-    $PORTER_HOME/porter mixin install helm --version $PORTER_VERSION --feed-url $FEED_URL
-    $PORTER_HOME/porter mixin install azure --version $PORTER_VERSION --feed-url $FEED_URL
+    echo "##vso[task.prependpath]${agent_temp_directory}/porter"
+    echo "##vso[task.setvariable variable=taskdir]${repo_local_path}/porter/${folder}"
 
-    echo "Installation complete."
-    echo "Add porter to your path by running:"
-    echo "export PATH=\$PATH:~/.porter"
+    cd "${repo_local_path}/porter/${folder}"
+
+    # install yq to parse the porter.yaml file
+     
+    echo "Installing yq"
+    pip install yq
+    echo "Installed yq"
+
+    cnab_name=$(yq .name porter.yaml -r)
+    echo "CNAB Name:${cnab_name}"
+
+    if [ "${cnab_name}" != "${folder}" ]; then 
+        printf "Name property should in porter.yaml should be the same as the solution directory name. Name property:%s Directory Name: %s\\n" "${cnab_name}" "${folder}"
+        exit 1 
+    fi
+
+    invocation_image=$(yq .invocationImage porter.yaml -r)
+    echo "invocation_image: ${invocation_image}"
+
+    registry="${invocation_image%/*}"
+    echo "registry: ${registry}"
+
+    if [ "${registry}" != "${cnab_quickstart_registry}/${tool}" ]; then 
+        printf "Registry/repository portion of invocationImage property should be set to %s in porter.yaml\\n" "${cnab_quickstart_registry}/${tool}"
+        exit 1 
+    fi
+
+    ii_name="${invocation_image##*/}"
+    echo "ii_name: ${ii_name}"
+
+    if [ "${ii_name}" != "${cnab_name}" ]; then 
+        printf "Name portion of invocationImage property should be set to %s in port.yaml\\n" "${cnab_name}"
+        exit 1 
+    fi
+
+    echo "##vso[task.setvariable variable=image_repo]${cnab_name}"
+    echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
 
     build_required=true
 fi
 
- echo "##vso[task.setvariable variable=BuildRequired]${build_required}"
+echo "##vso[task.setvariable variable=BuildRequired]${build_required}"

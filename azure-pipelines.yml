@@ -52,3 +52,12 @@ steps:
     tags: $(ii_tag)
   condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Push'
+
+  bash: $(Build.Repository.LocalPath)/push_bundle.sh
+  workingDirectory: $(taskdir)
+  env:
+    agent_temp_directory: $(Agent.TempDirectory)
+    image_repo: $(image_repo)
+    image_registry: $(image_registry)
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
+  displayName: 'Push bundle.json to registry using ORAS'
