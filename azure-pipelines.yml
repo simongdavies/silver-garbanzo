@@ -53,7 +53,7 @@ steps:
   condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Push'
 
-  bash: $(Build.Repository.LocalPath)/push_bundle.sh
+- bash: $(Build.Repository.LocalPath)/push_bundle.sh
   workingDirectory: $(taskdir)
   env:
     agent_temp_directory: $(Agent.TempDirectory)
