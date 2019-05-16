@@ -122,8 +122,7 @@ if [ "${tool}" == "porter" ]; then
     # install yq to parse the porter.yaml file
      
     echo "Installing yq"
-    pip install --upgrade pip
-    pip install yq
+    python -m pip install --upgrade pip yq
     echo "Installed yq"
 
     cnab_name=$(yq .name porter.yaml -r)
