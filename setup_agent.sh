@@ -100,7 +100,7 @@ if [ "${tool}" == "porter" ]; then
     
     echo "Installing porter to ${porter_home}"
     mkdir -p "${porter_home}"
-    curl -fLo "${porter_home}/porter ${porter_url}/${porter_version}/porter-linux-amd64"
+    curl -fLo "${porter_home}/porter" "${porter_url}/${porter_version}/porter-linux-amd64"
     chmod +x "${porter_home}/porter"
     cp "${porter_home}/porter" "${porter_home}/porter-runtime"
     echo Installed "$("${porter_home}/porter" version)"
