@@ -20,6 +20,7 @@ steps:
   inputs:
     versionSpec: '3.6'
     architecture: 'x64'
+  displayName: 'Use Python 3.6'
 
 - bash: $(Build.Repository.LocalPath)/setup_agent.sh
   env:
