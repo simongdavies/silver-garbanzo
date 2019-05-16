@@ -148,7 +148,7 @@ if [ "${tool}" == "porter" ]; then
     echo "ii_name: ${ii_name}"
 
     if [ "${ii_name}" != "${cnab_name}" ]; then 
-        printf "Name portion of invocationImage property should be set to %s in port.yaml\\n" "${cnab_name}"
+        printf "Name portion of invocationImage property should be set to %s in porter.yaml\\n" "${cnab_name}"
         exit 1 
     fi
 
