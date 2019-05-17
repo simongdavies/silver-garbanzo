@@ -27,7 +27,6 @@ steps:
   inputs:
     command: login
     containerRegistry: CNABRegistry
-  #condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Registry Login'
 
 - bash: $(Build.Repository.LocalPath)/setup_agent.sh
