@@ -12,5 +12,5 @@ echo "Installed ORAS"
 
 oras_name="${image_registry}/${image_repo}/bundle.json:latest"
 echo "Pushing bundle.json to registry using ORAS: ${oras_name}"
-oras push "${oras_name}" bundle.json
+"${oras_install}/oras" push "${oras_name}" bundle.json
 echo "Pushed bundle.json to registry using ORAS: ${oras_name}"
