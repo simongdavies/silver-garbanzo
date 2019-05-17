@@ -47,6 +47,7 @@ steps:
     tool: $(tool)
     image_repo: $(image_repo)
     image_registry: $(image_registry)
+    porter_image_suffix: $(porter_image_suffix)
   condition: and(succeeded(),eq(variables.BuildRequired, 'true'))
   displayName: 'Run builder tool to build and validate the bundle'
 

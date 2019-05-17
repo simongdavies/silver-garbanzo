@@ -13,21 +13,19 @@ if [ "${reason}" == "IndividualCI" ]; then
     commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
     echo "Merge Commit uri: ${commit_uri}"
     files=$(curl "${commit_uri}"|jq '[.files[].filename]') 
-    porter_image_suffix=""
 fi
 
 if [ "${reason}" == "PullRequest" ]; then
     pr_uri="https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"
     echo "PR uri: ${pr_uri}"
     files=$(curl "${pr_uri}"|jq '[.[].filename]') 
-    porter_image_suffix="${pr_number}"
 fi
 
 printf "file:\\n%s\\n" "${files}"
 
 tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)
 
-echo "##vso[task.setvariable variable=image_repo]${tool}"
+echo "##vso[task.setvariable variable=tool]${tool}"
 printf "tool:%s\\n" "${tool}"
 
 
@@ -156,8 +154,18 @@ if [ "${tool}" == "porter" ]; then
         exit 1 
     fi
 
-    echo "##vso[task.setvariable variable=image_repo]${cnab_name}"
+     # set tag to PR Number if this is a PR as porter will update the image in the registry
+     # TODO remove this when option is provided to prevent push
+
+    if [ "${reason}" == "PullRequest" ]; then
+        tmpfile=$(mktemp)
+        yq -y --arg image "${cnab_name}:{pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
+        mv "${tmpfile}" porter.yaml
+    fi
+
+    echo "##vso[task.setvariable variable=image_repo]${image_repo}"
     echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
+   
 
     build_required=true
 fi
