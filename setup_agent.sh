@@ -157,11 +157,11 @@ if [ "${tool}" == "porter" ]; then
      # set tag to PR Number if this is a PR as porter will update the image in the registry
      # TODO remove this when option is provided to prevent push
 
-    if [ "${reason}" == "PullRequest" ]; then
-        tmpfile=$(mktemp)
-        yq -y --arg image "${cnab_name}:${pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
-        mv "${tmpfile}" porter.yaml
-    fi
+    # if [ "${reason}" == "PullRequest" ]; then
+    #     tmpfile=$(mktemp)
+    #     yq -y --arg image "${cnab_name}:${pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
+    #     mv "${tmpfile}" porter.yaml
+    # fi
 
     echo "##vso[task.setvariable variable=image_repo]${image_repo}"
     echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
