@@ -27,9 +27,9 @@ steps:
   inputs:
     command: login
     containerRegistry: CNABRegistry
-  #condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Registry Login'
-
+- bash: echo Source Branch $(Build.SourceBranch)
+  displayName: 'Display source branch'
 - bash: $(Build.Repository.LocalPath)/setup_agent.sh
   env:
     agent_temp_directory: $(Agent.TempDirectory)
