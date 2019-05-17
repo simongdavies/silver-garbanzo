@@ -13,19 +13,23 @@ if [ "${reason}" == "IndividualCI" ]; then
     commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
     echo "Merge Commit uri: ${commit_uri}"
     files=$(curl "${commit_uri}"|jq '[.files[].filename]') 
+    porter_image_suffix=""
 fi
 
 if [ "${reason}" == "PullRequest" ]; then
     pr_uri="https://api.github.com/repos/${repo_name}/pulls/${pr_number}/files"
     echo "PR uri: ${pr_uri}"
     files=$(curl "${pr_uri}"|jq '[.[].filename]') 
+    porter_image_suffix="${pr_number}"
 fi
 
 printf "file:\\n%s\\n" "${files}"
 
 tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)
 
+echo "##vso[task.setvariable variable=image_repo]${tool}"
 printf "tool:%s\\n" "${tool}"
+
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 

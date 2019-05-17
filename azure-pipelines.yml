@@ -56,7 +56,7 @@ steps:
     containerRegistry: CNABRegistry
     repository: $(image_repo)
     tags: $(ii_tag)
-  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables['tool'], 'duffle'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Push'
 
 - bash: $(Build.Repository.LocalPath)/push_bundle.sh
