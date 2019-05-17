@@ -159,7 +159,7 @@ if [ "${tool}" == "porter" ]; then
 
     if [ "${reason}" == "PullRequest" ]; then
         tmpfile=$(mktemp)
-        yq -y --arg image "${cnab_name}:pr${pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
+        yq -y --arg image "${registry}/${cnab_name}:pr${pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
         mv "${tmpfile}" porter.yaml
     fi
 
