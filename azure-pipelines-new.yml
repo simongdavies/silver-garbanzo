@@ -27,6 +27,7 @@ steps:
   inputs:
     command: login
     containerRegistry: CNABRegistry
+  #condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Registry Login'
 
 - bash: $(Build.Repository.LocalPath)/setup_agent.sh
@@ -47,7 +48,6 @@ steps:
     tool: $(tool)
     image_repo: $(image_repo)
     image_registry: $(image_registry)
-    porter_image_suffix: $(porter_image_suffix)
   condition: and(succeeded(),eq(variables.BuildRequired, 'true'))
   displayName: 'Run builder tool to build and validate the bundle'
 
@@ -57,7 +57,7 @@ steps:
     containerRegistry: CNABRegistry
     repository: $(image_repo)
     tags: $(ii_tag)
-  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables['tool'], 'duffle'),eq(variables.BuildRequired, 'true'))
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'),eq(variables.BuildRequired, 'true'))
   displayName: 'Docker Push'
 
 - bash: $(Build.Repository.LocalPath)/push_bundle.sh
