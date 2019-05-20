@@ -39,7 +39,7 @@ TOOLHOME="${HOME}/bin/cnabquickstarts"
 
 # set up local folder for programs and update path
 
-if [  -f "${TOOLHOME}" ]; then 
+if [ ! -d  "${TOOLHOME}" ]; then 
     mkdir "${TOOLHOME}"  
     export PATH="${TOOLHOME}:${PATH}"
     echo  export PATH="${TOOLHOME}:${PATH}" >> "${HOME}/.bashrc"
