@@ -43,6 +43,7 @@ if [ ! -d  "${TOOLHOME}" ]; then
     mkdir "${TOOLHOME}"  
     export PATH="${TOOLHOME}:${PATH}"
     if [ -f "${HOME}/.bashrc" ]; then
+        echo "" >> "${HOME}/.bashrc"
         echo  export PATH="${TOOLHOME}:${PATH}" >> "${HOME}/.bashrc"
         echo ".bashrc updated to include ${TOOLHOME} in PATH "
     else 
@@ -106,7 +107,7 @@ fi
 echo "Creating Default Credentials File from https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml"
 curl "https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}/${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
 echo "Created Default Credentials"
-"${TOOLHOME}/duffle" credentials list ${DEFAULT_CREDENTIALS_NAME}
+"${TOOLHOME}/duffle" credentials show ${DEFAULT_CREDENTIALS_NAME}
 
 if [ -f "${HOME}/.bashrc" ]; then
     source "${HOME}/.bashrc"
