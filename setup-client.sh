@@ -52,8 +52,7 @@ fi;
 
 # Install duffle 
 
-echo "Installing duffle to ${TOOLHOME}"
-echo ""https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64""
+echo "Installing duffle (https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64) to ${TOOLHOME}"
 curl "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64" -fLo "${TOOLHOME}/duffle"
 chmod +x "${TOOLHOME}/duffle"
 "${TOOLHOME}/duffle" init
@@ -64,7 +63,7 @@ echo Installed "duffle: $("${TOOLHOME}/duffle" version)"
 DUFFLE_ACI_DRIVER_VERSION=v.0.0.1
 DUFFLE_ACI_DRIVER_REPO=simongdavies/duffle-aci-driver
 
-echo "Installing duffle-svi-driver to ${TOOLHOME}"
+echo "Installing duffle-aci-driver (https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-linux-amd64) to ${TOOLHOME}"
 curl "https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-linux-amd64" -fLo "${TOOLHOME}/duffle-aci-driver"
 chmod +x "${TOOLHOME}/duffle-aci-driver"
 echo Installed "duffle: $("${TOOLHOME}/duffle-aci-driver" version)"
