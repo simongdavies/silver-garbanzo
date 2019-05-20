@@ -103,4 +103,4 @@ curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -Lo "${DU
 echo "Created Default Credentials"
 "${TOOLHOME}/porter" credentials list ${DEFAULT_CREDENTIALS_NAME}
 
-source ~./bashrc
+source "${HOME}/.bashrc"
