@@ -91,3 +91,14 @@ curl https://github.com/${ORAS_REPO}/releases/download/v${ORAS_VERSION}/oras_${O
 tar -zxf "${ORAS_DOWNLOAD_DIR}/oras_0.5.0_linux_amd64.tar.gz" -C "${TOOLHOME}"
 chmod +x "${TOOLHOME}/oras"
 echo Installed "Oras: $("${TOOLHOME}/oras" version)"
+
+DEFAULT_CREDENTIALS_NAME="default-credentials"
+DEFAULT_CREDENTIALS_LOCATION=https://github.com/simongdavies/silver-garbanzo/blob/master/
+if [ -z "${DUFFLE_HOME}" ]; then 
+    DUFFLE_HOME="${HOME}/.duffle"
+fi
+echo "Creating Default Credentials File"
+curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
+
+echo "Created Default Credentials"
+"${TOOLHOME}/porter" credentials list ${DEFAULT_CREDENTIALS_NAME}
