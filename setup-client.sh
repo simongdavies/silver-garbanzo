@@ -48,7 +48,7 @@ fi;
 # Install duffle 
 
 echo "Installing duffle to ${TOOLHOME}"
-curl "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64" -fLo "${TOOLHOME}/duffle"
+curl "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64" -Lo "${TOOLHOME}/duffle"
 chmod +x "${TOOLHOME}/duffle"
 "${TOOLHOME}/duffle" init
 echo Installed "duffle: $("${TOOLHOME}/duffle" version)"
@@ -59,7 +59,7 @@ DUFFLE_ACI_DRIVER_VERSION=v.0.0.1
 DUFFLE_ACI_DRIVER_REPO=simongdavies/duffle-aci-driver
 
 echo "Installing duffle-svi-driver to ${TOOLHOME}"
-curl "https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-linux-amd64" -fLo "${TOOLHOME}/duffle-aci-driver"
+curl "https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-linux-amd64" -Lo "${TOOLHOME}/duffle-aci-driver"
 chmod +x "${TOOLHOME}/duffle-aci-driver"
 echo Installed "duffle: $("${TOOLHOME}/duffle-aci-driver" version)"
 
@@ -70,7 +70,7 @@ PORTER_VERSION="${PORTER_VERSION:-latest}"
 FEED_URL="${PORTER_URL}/atom.xml"
 
 echo "Installing porter to ${TOOLHOME}"
-curl -fLo "${TOOLHOME}/porter" "${PORTER_URL}/${PORTER_VERSION}/porter-linux-amd64"
+curl -Lo "${TOOLHOME}/porter" "${PORTER_URL}/${PORTER_VERSION}/porter-linux-amd64"
 chmod +x "${TOOLHOME}/porter"
 cp "${TOOLHOME}/porter" "${TOOLHOME}/porter-runtime"
 echo Installed "Porter: $("${TOOLHOME}/porter" version)"
@@ -87,7 +87,7 @@ ORAS_REPO=deislabs/oras
 ORAS_DOWNLOAD_DIR=/tmp
 
 echo "Installing oras"
-curl https://github.com/${ORAS_REPO}/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz -fLo "${ORAS_DOWNLOAD_DIR}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
+curl https://github.com/${ORAS_REPO}/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz -Lo "${ORAS_DOWNLOAD_DIR}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
 tar -zxf "${ORAS_DOWNLOAD_DIR}/oras_0.5.0_linux_amd64.tar.gz" -C "${TOOLHOME}"
 chmod +x "${TOOLHOME}/oras"
 echo Installed "Oras: $("${TOOLHOME}/oras" version)"
@@ -98,7 +98,7 @@ if [ -z "${DUFFLE_HOME}" ]; then
     DUFFLE_HOME="${HOME}/.duffle"
 fi
 echo "Creating Default Credentials File"
-curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
+curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -Lo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
 
 echo "Created Default Credentials"
 "${TOOLHOME}/porter" credentials list ${DEFAULT_CREDENTIALS_NAME}
