@@ -42,7 +42,12 @@ TOOLHOME="${HOME}/bin/cnabquickstarts"
 if [ ! -d  "${TOOLHOME}" ]; then 
     mkdir "${TOOLHOME}"  
     export PATH="${TOOLHOME}:${PATH}"
-    echo  export PATH="${TOOLHOME}:${PATH}" >> "${HOME}/.bashrc"
+    if [ -f "${HOME}/.bashrc" ]; then
+        echo  export PATH="${TOOLHOME}:${PATH}" >> "${HOME}/.bashrc"
+        ".bashrc updated to include ${TOOLHOME} in PATH "
+    else 
+        echo "Update your PATH to include ${TOOLHOME}"
+    fi
 fi;
 
 # Install duffle 
@@ -103,4 +108,6 @@ curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -Lo "${DU
 echo "Created Default Credentials"
 "${TOOLHOME}/porter" credentials list ${DEFAULT_CREDENTIALS_NAME}
 
-source "${HOME}/.bashrc"
+if [ -f "${HOME}/.bashrc" ]; then
+    source "${HOME}/.bashrc"
+fi
