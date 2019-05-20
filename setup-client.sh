@@ -33,7 +33,7 @@ fi
 
 # Set up Duffle, Porter and Oras 
 
-DUFFLE_VERSION=untagged-528f5d0a86f992ed89f0
+DUFFLE_VERSION=aciidriver
 DUFFLE_REPO=simongdavies/duffle
 TOOLHOME="${HOME}/bin/cnabquickstarts"
 
