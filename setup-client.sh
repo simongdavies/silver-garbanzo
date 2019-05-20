@@ -75,7 +75,7 @@ PORTER_URL=https://cdn.deislabs.io/porter
 PORTER_VERSION="${PORTER_VERSION:-latest}"
 FEED_URL="${PORTER_URL}/atom.xml"
 
-echo "Installing porter to ${TOOLHOME}"
+echo "Installing porter (${PORTER_URL}/${PORTER_VERSION}/porter-linux-amd64) to ${TOOLHOME}"
 curl "${PORTER_URL}/${PORTER_VERSION}/porter-linux-amd64" -fLo "${TOOLHOME}/porter"
 chmod +x "${TOOLHOME}/porter"
 cp "${TOOLHOME}/porter" "${TOOLHOME}/porter-runtime"
