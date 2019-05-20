@@ -98,15 +98,15 @@ chmod +x "${TOOLHOME}/oras"
 echo Installed "Oras: $("${TOOLHOME}/oras" version)"
 
 DEFAULT_CREDENTIALS_NAME="default-credentials"
-DEFAULT_CREDENTIALS_LOCATION=https://github.com/simongdavies/silver-garbanzo/blob/master/
+DEFAULT_CREDENTIALS_LOCATION=simongdavies/silver-garbanzo/master
 if [ -z "${DUFFLE_HOME}" ]; then 
     DUFFLE_HOME="${HOME}/.duffle"
 fi
-echo "Creating Default Credentials File"
-curl "${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
 
+echo "Creating Default Credentials File from https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml"
+curl "https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}/${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
 echo "Created Default Credentials"
-"${TOOLHOME}/porter" credentials list ${DEFAULT_CREDENTIALS_NAME}
+"${TOOLHOME}/duffle" credentials list ${DEFAULT_CREDENTIALS_NAME}
 
 if [ -f "${HOME}/.bashrc" ]; then
     source "${HOME}/.bashrc"
