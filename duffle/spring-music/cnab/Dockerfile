@@ -18,6 +18,7 @@ RUN apt-get update -y \
     && ./get_helm.sh
 
 COPY app/ /cnab/app/
+RUN chmod 755 /cnab/app/run
 COPY Dockerfile cnab/Dockerfile
 
 CMD [ "/cnab/app/run" ]
