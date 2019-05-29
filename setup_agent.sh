@@ -57,7 +57,7 @@ if [ "${tool}" == "duffle" ]; then
     curl https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64 -fLo "${agent_temp_directory}/duffle/duffle"
     chmod +x "${agent_temp_directory}/duffle/duffle"
 
-    echo Installed "duffle: $("{agent_temp_directory}/duffle/duffle" version)"
+    echo Installed "duffle: $("${agent_temp_directory}/duffle/duffle" version)"
 
     echo "Downloaded Duffle"
 
