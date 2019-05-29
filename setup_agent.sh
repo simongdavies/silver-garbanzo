@@ -2,8 +2,19 @@
 
 set -e 
 duffle_version="/0.1.0-ralpha.5%2Benglishrose"
-cnab_quickstart_registry="sdacr.azurecr.io"
 repository_path="duffle"
+cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
+
+# Update could be in either the duffle or the porter directory or it could be an update that is not related to a solution, this should only happen on a merge as builds are only trigged for PR when changes are made in the dufffle or porter folder
+
+echo "Get the files in the PR or merge commit to find the solution folder name"
+
+if [ "${reason}" == "IndividualCI" ]; then
+    owner_and_repo="${repo_uri##https://github.com/}"
+    commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
+    echo "Merge Commit uri: ${commit_uri}"
+    files=$(curl "${commit_uri}"|jq '[.files[].filename]') 
+fi
 
 echo "Download Duffle"
 
