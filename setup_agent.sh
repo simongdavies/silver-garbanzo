@@ -21,6 +21,8 @@ if [ "${reason}" == "PullRequest" ]; then
     files=$(curl "${pr_uri}"|jq '[.[].filename]') 
 fi
 
+# TODO: Need to handle multiple solution changes
+
 printf "file:\\n%s\\n" "${files}"
 
 tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)

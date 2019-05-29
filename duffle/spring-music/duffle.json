@@ -1,7 +1,7 @@
 {
     "name": "spring-music",
     "version": "0.1.0",
-    "description": "Spring Music",
+    "description": "Spring Music.",
     "maintainers": [
       {
           "name": "Brian Redmond",
@@ -17,7 +17,7 @@
             "name": "cnab",
             "builder": "docker",
             "configuration": {
-                "registry": "sdacr.azurecr.io/duffle"
+                "registry": "cnabquickstartstest.azurecr.io/duffle"
             }
         }
     },
