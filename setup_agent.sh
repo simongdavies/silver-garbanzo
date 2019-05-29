@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e 
-duffle_version="/0.1.0-ralpha.5%2Benglishrose"
+
+DUFFLE_VERSION=aciidriver
+DUFFLE_REPO=simongdavies/duffle
+
 cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
 build_required=false
 
@@ -51,7 +54,7 @@ if [ "${tool}" == "duffle" ]; then
     echo "Downloading Duffle"
 
     mkdir "${agent_temp_directory}/duffle"
-    curl https://github.com/deislabs/duffle/releases/download/${duffle_version}/duffle-linux-amd64 -fLo "${agent_temp_directory}/duffle/duffle"
+    curl https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64 -fLo "${agent_temp_directory}/duffle/duffle"
     chmod +x "${agent_temp_directory}/duffle/duffle"
 
     echo "Downloaded Duffle"

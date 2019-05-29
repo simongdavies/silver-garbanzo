@@ -23,28 +23,28 @@
     },
     "parameters": {
       "cluster_name": {
-        "defaultValue": "cnab-spring-music-demo",
+        "defaultValue": "spring-music-demo",
         "type": "string",
         "destination": {
           "env": "CLUSTER_NAME"
         }
       },
       "aks_resource_group": {
-        "defaultValue": "cnab-spring-music-duffle",
+        "defaultValue": "spring-music-duffle",
         "type": "string",
         "destination": {
           "env": "AKS_RESOURCE_GROUP"
         }
       },
       "app_resource_group": {
-        "defaultValue": "cnab-spring-music-duffle",
+        "defaultValue": "spring-music-duffle",
         "type": "string",
         "destination": {
           "env": "APP_RESOURCE_GROUP"
         }
       },
       "cosmosdb_service_name": {
-        "defaultValue": "cnabspringmusicduffle",
+        "defaultValue": "springmusicduffle",
         "type": "string",
         "destination": {
           "env": "COSMOSDB_SERVICE_NAME"
