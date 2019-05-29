@@ -51,9 +51,9 @@ printf "folder:%s\\n" "${folder}"
 
 if [ "${tool}" == "duffle" ]; then
 
-    printf "Downloading Duffle from %s\\n"
+    printf "Downloading Duffle from %s\\n" "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64"
 
-    mkdir "${agent_temp_directory}/duffle" "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64"
+    mkdir "${agent_temp_directory}/duffle" 
     curl https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64 -fLo "${agent_temp_directory}/duffle/duffle"
     chmod +x "${agent_temp_directory}/duffle/duffle"
 
