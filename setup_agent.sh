@@ -89,8 +89,8 @@ if [ "${tool}" == "duffle" ]; then
     image_repo="${cnab_name}-${ii_name}" 
     echo "image_repo: ${image_repo}"
 
-    echo "##vso[task.setvariable variable=image_repo]${image_repo}"
-    echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
+    echo "##vso[task.setvariable variable=image_repo]${tool}/${image_repo}"
+    echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}"
     build_required=true
 fi
 
