@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e 
 duffle_version="/0.1.0-ralpha.5%2Benglishrose"
-cnab_quickstart_registry="sdacr.azurecr.io"
+cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
 build_required=false
 
 # Update could be in either the duffle or the porter directory or it could be an update that is not related to a solution, this should only happen on a merge as builds are only trigged for PR when changes are made in the dufffle or porter folder
