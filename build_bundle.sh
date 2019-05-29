@@ -8,7 +8,7 @@ echo "Building Bundle in Solution Directory: $(pwd) using ${tool}"
 
 if [ "${tool}" == "duffle" ]; then
     duffle init
-    duffle build
+    duffle build -o bundle.json
 fi
 
 if [ "${tool}" == "porter" ]; then
