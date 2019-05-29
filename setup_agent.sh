@@ -169,7 +169,8 @@ if [ "${tool}" == "porter" ]; then
         yq -y --arg image "${registry}/${cnab_name}:pr${pr_number}" '.invocationImage = $image' > "${tmpfile}" < porter.yaml
         mv "${tmpfile}" porter.yaml
     fi
-
+    image_repo="${cnab_name}" 
+    echo "image_repo: ${image_repo}"
     echo "##vso[task.setvariable variable=image_repo]${image_repo}"
     echo "##vso[task.setvariable variable=image_registry]${cnab_quickstart_registry}/${tool}"
    

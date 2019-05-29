@@ -41,7 +41,7 @@ case $action in
         ;;
     uninstall)
         echo "uninstall action"
-        az group delete $APP_RESOURCE_GROUP
+        az group delete -n $APP_RESOURCE_GROUP
         ;;
     upgrade)
         echo "Upgrade action"
