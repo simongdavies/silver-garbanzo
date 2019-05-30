@@ -108,10 +108,10 @@ if [ "${tool}" == "porter" ]; then
     # TODO revert release once permission fix is available
     # porter_url=https://cdn.deislabs.io/porter
     # porter_version="${porter_version:-latest}"
-
+    # feed_url="${porter_url}/atom.xml"
     porter_url=https://github.com/simongdavies/porter/releases/download/
     porter_version="fix"
-    feed_url="${porter_url}/atom.xml"
+    feed_url="https://cdn.deislabs.io/porter/atom.xml"
     
     echo "Installing porter to ${porter_home}"
     mkdir -p "${porter_home}"
