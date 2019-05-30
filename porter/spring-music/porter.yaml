@@ -95,13 +95,13 @@ uninstall:
         - echo App should be uninstalled here, but it is not
 
 credentials:
-- name: SUBSCRIPTION_ID
+- name: subscription_id
   env: AZURE_SUBSCRIPTION_ID
-- name: CLIENT_ID
+- name: client_id
   env: AZURE_CLIENT_ID
-- name: TENANT_ID
+- name: tenant_id
   env: AZURE_TENANT_ID
-- name: CLIENT_SECRET
+- name: client_secret
   env: AZURE_CLIENT_SECRET
 
 parameters:
@@ -117,16 +117,16 @@ parameters:
     env: AKS_RESOURCE_GROUP
 - name: aks-cluster-name
   type: string
-  default: my-aks-spring
+  default: spring-music-demo
   destination:
     env: AKS_CLUSTER_NAME
 - name: cosmosdb-service-name
   type: string
-  default: myspringmusic
+  default: springmusicporter
   destination:
     env: COSMOSDB_SERVICE_NAME
 - name: azure-location
   type: string
-  default: eastus
+  default: westeurope
   destination:
     env: AZURE_LOCATION
