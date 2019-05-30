@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e 
 
-DUFFLE_VERSION=aciidriver
-DUFFLE_REPO=simongdavies/duffle
-
 cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
 build_required=false
 
@@ -50,6 +47,9 @@ printf "folder:%s\\n" "${folder}"
 # Duffle based solution
 
 if [ "${tool}" == "duffle" ]; then
+
+    DUFFLE_VERSION=aciidriver
+    DUFFLE_REPO=simongdavies/duffle
 
     printf "Downloading Duffle from %s\\n" "https://github.com/${DUFFLE_REPO}/releases/download/${DUFFLE_VERSION}/duffle-linux-amd64"
 
@@ -102,9 +102,15 @@ fi
 # Porter Solution
 
 if [ "${tool}" == "porter" ]; then
+
     porter_home="${agent_temp_directory}/porter"
-    porter_url=https://cdn.deislabs.io/porter
-    porter_version="${porter_version:-latest}"
+
+    # TODO revert release once permission fix is available
+    # porter_url=https://cdn.deislabs.io/porter
+    # porter_version="${porter_version:-latest}"
+
+    porter_url=https://github.com/simongdavies/porter/releases/download/
+    porter_version="fix"
     feed_url="${porter_url}/atom.xml"
     
     echo "Installing porter to ${porter_home}"
