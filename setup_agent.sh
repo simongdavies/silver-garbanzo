@@ -120,6 +120,9 @@ if [ "${tool}" == "porter" ]; then
     cp "${porter_home}/porter" "${porter_home}/porter-runtime"
     echo Installed "$("${porter_home}/porter" version)"
 
+    # TODO revert release once permission fix is available
+    porter_version="latest"
+
     echo "Installing mixins"
     "${porter_home}/porter" mixin install exec --version "${porter_version}" --feed-url "${feed_url}"
     "${porter_home}/porter" mixin install kubernetes --version "${porter_version}" --feed-url "${feed_url}"
