@@ -18,8 +18,8 @@ install:
       resourceGroup: "{{ bundle.parameters.aks-resource-group }}"
       parameters:
         clusterName: "{{ bundle.parameters.aks-cluster-name }}"
-        servicePrincipalClientId: "{{ bundle.credentials.CLIENT_ID}}"
-        servicePrincipalClientSecret: "{{ bundle.credentials.CLIENT_SECRET}}"
+        servicePrincipalClientId: "{{ bundle.credentials.client_id}}"
+        servicePrincipalClientSecret: "{{ bundle.credentials.client_secret}}"
         location: "{{ bundle.parameters.azure-location }}"
 
   - exec: 
@@ -29,9 +29,9 @@ install:
         - "login" 
         - "--service-principal"
         - "--username" 
-        - "{{ bundle.credentials.CLIENT_ID}}"
+        - "{{ bundle.credentials.client_id}}"
         - "--password" 
-        - "{{ bundle.credentials.CLIENT_SECRET}}"
+        - "{{ bundle.credentials.client_secret}}"
         - "--tenant" 
         - "{{ bundle.credentials.TENANT_ID}}"
 
@@ -95,13 +95,13 @@ uninstall:
         - echo App should be uninstalled here, but it is not
 
 credentials:
-- name: subscription_id
+- name: azure_subscription_id
   env: AZURE_SUBSCRIPTION_ID
-- name: client_id
+- name: azure_client_id
   env: AZURE_CLIENT_ID
-- name: tenant_id
+- name: azure_tenant_id
   env: AZURE_TENANT_ID
-- name: client_secret
+- name: azure_client_secret
   env: AZURE_CLIENT_SECRET
 
 parameters:
