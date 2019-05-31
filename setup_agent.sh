@@ -8,6 +8,8 @@ build_required=false
 
 echo "Get the files in the PR or merge commit to find the solution folder name"
 
+# TODO ignore files that start with .
+
 if [ "${reason}" == "IndividualCI" ]; then
     owner_and_repo="${repo_uri##https://github.com/}"
     commit_uri=https://api.github.com/repos/${owner_and_repo}/commits/${source_version}
