@@ -1,13 +1,16 @@
 #!/bin/sh
 
+echo "Action $action started for $name at: $(date)"
+started=$SECONDS
 action=$CNAB_ACTION
+name=$CNAB_INSTALLATION_NAME 
 greeting=${GREETING:-"Hi! let's install the sample Spring Music demo app on Azure"}
 
 echo "[== $greeting Duffle user ==]"
 case $action in
     install)
         echo "Run az login with service principal to access Azure sub"
-        echo $client_id
+       
         az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
 
         echo "Creating a resource group for AKS"
@@ -53,4 +56,6 @@ case $action in
     echo "No action for $action"
     ;;
 esac
-echo "Action $action complete for $name"
+echo "Action $action finished for $name at: $(date)"
+elapsed=$((SECONDS-started))
+echo "Duration: $((elapsed/60)) minutes $((elapsed%60)) seconds"
