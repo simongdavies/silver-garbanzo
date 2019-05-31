@@ -1,6 +1,10 @@
 # Spring Music Demo App with Azure Cosmos DB
 
-This CNAB bundle is designed to be installed with Duffle.
+This CNAB bundle is created using Duffle.
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsimongdavies%2Fsilver-garbanzo%2Fmaster%2Fduffle%2Fspring-music%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/> 
+</a>
 
 ### Prerequistes
 
