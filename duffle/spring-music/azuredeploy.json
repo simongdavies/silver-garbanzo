@@ -41,21 +41,21 @@
             }
         },
         "cnab_p_cluster_name" : {
-            "type": "securestring",
+            "type": "string",
             "defaultValue": "spring-music-demo",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
         "cnab_p_aks_resource_group": {
-            "type": "securestring",
+            "type": "string",
             "defaultValue": "spring-music-duffle",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
         "cnab_p_app_resource_group": {
-            "type": "securestring",
+            "type": "string",
             "defaultValue": "spring-music-duffle",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
@@ -63,22 +63,24 @@
         },
         "cnab_p_cosmosdb_service_name" : {
             "defaultValue": "springmusicduffle",
-            "type": "securestring",
+            "type": "string",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
         "cnab_installation_name": {
-            "type": "securestring",
+            "type": "string",
             "metadata": {
                 "description": "The name of the application instance"
-            }
+            },
+            "defaultValue": "spring-music-duffle"
         },
         "cnab_action": {
-            "type": "securestring",
+            "type": "string",
             "metadata": {
                 "description": "The name of the action to be performed on the application instance"
-            }
+            },
+            "defaultValue": "install"
         },
         "containerGroupName": {
             "type": "string",
