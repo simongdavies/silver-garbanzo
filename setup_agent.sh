@@ -34,7 +34,7 @@ printf "tool:%s\\n" "${tool}"
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
 if [ "${tool}" ]; then
-    if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d)" ]; then 
+    if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d ! -name '.*')" ]; then 
         printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${tool}" "${tool}"
         exit 1 
     fi
