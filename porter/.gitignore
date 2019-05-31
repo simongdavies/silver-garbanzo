@@ -2,3 +2,4 @@
 */cnab/app/porter-runtime
 */Dockerfile
 */bundle.json
+*/azuredeploy.test.parameters.json
