@@ -18,8 +18,8 @@ install:
       resourceGroup: "{{ bundle.parameters.aks-resource-group }}"
       parameters:
         clusterName: "{{ bundle.parameters.aks-cluster-name }}"
-        servicePrincipalClientId: "{{ bundle.credentials.client_id}}"
-        servicePrincipalClientSecret: "{{ bundle.credentials.client_secret}}"
+        servicePrincipalClientId: "{{ bundle.credentials.azure_client_id}}"
+        servicePrincipalClientSecret: "{{ bundle.credentials.azure_client_secret}}"
         location: "{{ bundle.parameters.azure-location }}"
 
   - exec: 
@@ -29,11 +29,11 @@ install:
         - "login" 
         - "--service-principal"
         - "--username" 
-        - "{{ bundle.credentials.client_id}}"
+        - "{{ bundle.credentials.azure_client_id}}"
         - "--password" 
-        - "{{ bundle.credentials.client_secret}}"
+        - "{{ bundle.credentials.azure_client_secret}}"
         - "--tenant" 
-        - "{{ bundle.credentials.TENANT_ID}}"
+        - "{{ bundle.credentials.azure_tenant_id}}"
 
   - exec: 
       description: "Azure CLI AKS get-credentials"
