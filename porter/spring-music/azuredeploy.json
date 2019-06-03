@@ -28,40 +28,40 @@
                 "description": "The location in which the resources will be created."
             }
         },
-        "cnab_c_azure_client_id": {
+        "azure_client_id": {
             "type": "securestring",  
             "metadata": {
                 "description": "Client ID to be used with the bundle"
             }
         },
-        "cnab_c_azure_client_secret": {
+        "azure_client_secret": {
             "type": "securestring",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
-        "cnab_p_cluster_name" : {
+        "cluster_name" : {
             "type": "string",
             "defaultValue": "spring-music-demo",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
-        "cnab_p_aks_resource_group": {
+        "aks_resource_group": {
             "type": "string",
             "defaultValue": "spring-music-duffle",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
-        "cnab_p_app_resource_group": {
+        "app_resource_group": {
             "type": "string",
             "defaultValue": "spring-music-duffle",
             "metadata": {
                 "description": "Client SECRET to be used with the bundle"
             }
         },
-        "cnab_p_cosmosdb_service_name" : {
+        "cosmosdb_service_name" : {
             "defaultValue": "springmusicduffle",
             "type": "string",
             "metadata": {
@@ -125,39 +125,39 @@
                                     "secureValue": "porter/spring-music"    
                                 },   
                                 {
-                                    "name":"CNAB_C_AZURE_SUBSCRIPTION_ID",
+                                    "name":"AZURE_SUBSCRIPTION_ID",
                                     "secureValue": "[subscription().subscriptionId]"    
                                 },
                                 {
-                                    "name":"CNAB_C_AZURE_TENANT_ID",
+                                    "name":"AZURE_TENANT_ID",
                                     "secureValue": "[subscription().tenantId]"    
                                 },
                                 {
-                                    "name":"CNAB_C_AZURE_CLIENT_ID",
-                                    "secureValue": "[parameters('cnab_c_azure_client_id')]"    
+                                    "name":"AZURE_CLIENT_ID",
+                                    "secureValue": "[parameters('azure_client_id')]"    
                                 },
                                 {
-                                    "name":"CNAB_C_AZURE_CLIENT_SECRET",
-                                    "secureValue": "[parameters('cnab_c_azure_client_secret')]"    
+                                    "name":"AZURE_CLIENT_SECRET",
+                                    "secureValue": "[parameters('azure_client_secret')]"    
                                 },
                                 {
-                                    "name":"CNAB_P_CLUSTER_NAME",
-                                    "secureValue": "[parameters('cnab_p_cluster_name')]"    
+                                    "name":"CLUSTER_NAME",
+                                    "secureValue": "[parameters('cluster_name')]"    
                                 },
                                 {
-                                    "name":"CNAB_P_AKS_RESOURCE_GROUP",
-                                    "secureValue": "[parameters('cnab_p_aks_resource_group')]"    
+                                    "name":"AKS_RESOURCE_GROUP",
+                                    "secureValue": "[parameters('aks_resource_group')]"    
                                 },
                                 {
-                                    "name":"CNAB_P_APP_RESOURCE_GROUP",
-                                    "secureValue": "[parameters('cnab_p_app_resource_group')]"    
+                                    "name":"APP_RESOURCE_GROUP",
+                                    "secureValue": "[parameters('app_resource_group')]"    
                                 },
                                 {
-                                    "name":"CNAB_P_COSMOSDB_SERVICE_NAME",
-                                    "secureValue": "[parameters('cnab_p_cosmosdb_service_name')]"    
+                                    "name":"COSMOSDB_SERVICE_NAME",
+                                    "secureValue": "[parameters('cosmosdb_service_name')]"    
                                 },
                                 {
-                                    "name":"CNAB_P_APP_COSMOSDB_LOCATION",
+                                    "name":"APP_COSMOSDB_LOCATION",
                                     "secureValue": "[parameters('location')]"    
                                 },
                                 {
