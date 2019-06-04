@@ -4,6 +4,22 @@ set -e
 cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
 build_required=false
 
+function check_required_files() {
+
+    # TODO Validate the files
+
+    if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then 
+        echo "Solution should contain an ARM template to deploy the solution named azuredeploy.json."
+        exit 1
+    fi
+
+    if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then 
+        echo "Solution should contain an metadata file named metadata.json."
+        exit 1
+    fi
+
+}
+
 # Update could be in either the duffle or the porter directory or it could be an update that is not related to a solution, this should only happen on a merge as builds are only trigged for PR when changes are made in the dufffle or porter folder
 
 echo "Get the files in the PR or merge commit to find the solution folder name"
@@ -36,7 +52,7 @@ printf "tool:%s\\n" "${tool}"
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
 if [ "${tool}" ]; then
-    if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d ! -name '.*')" ]; then 
+    if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d ! -name '.*' ! -name README.md)" ]; then 
         printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${tool}" "${tool}"
         exit 1 
     fi
@@ -49,6 +65,8 @@ printf "folder:%s\\n" "${folder}"
 # Duffle based solution
 
 if [ "${tool}" == "duffle" ]; then
+
+    check_required_files
 
     DUFFLE_VERSION=aciidriver
     DUFFLE_REPO=simongdavies/duffle
@@ -105,12 +123,15 @@ fi
 
 if [ "${tool}" == "porter" ]; then
 
+    check_required_files
+
     porter_home="${agent_temp_directory}/porter"
 
     # TODO revert release once permission fix is available
     # porter_url=https://cdn.deislabs.io/porter
     # porter_version="${porter_version:-latest}"
     # feed_url="${porter_url}/atom.xml"
+    
     porter_url=https://github.com/simongdavies/porter/releases/download/
     porter_version="fix"
     feed_url="https://cdn.deislabs.io/porter/atom.xml"

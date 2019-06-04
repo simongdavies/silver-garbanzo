@@ -1,34 +1,45 @@
 #!/bin/bash
 set -e 
 
-# By default these credentials will also be used to execute ACI Driver 
-# TODO Change this to use logged in user by default
+# Check if running in CloudShell
 
-if [ -z "${AZURE_SUBSCRIPTION_ID}" ]; then 
-    echo "Environment Variable AZURE_SUBSCRIPTION_ID should be set to the Azure Subscription Id to be used with CNAB Bundles" 
-    exit 1
-fi 
-
-if [ -z "${AZURE_TENANT_ID}" ]; then 
-    echo "Environment Variable AZURE_TENANT_ID should be set to the Azure Subscription Id to be used with CNAB Bundles" 
+if [[ -z ${ACC_CLOUD} ]]; then 
+    echo "This script is intended to run in Azure CloudShell" 
     exit 1
 fi
 
-if [ -z "${AZURE_CLIENT_ID}" ]; then 
-    echo "Environment Variable AZURE_CLIENT_ID should be set to the Azure Service  to be used with CNAB Bundles" 
-    exit 1
+# This is the subscription that is used to execute ACI Driver
+
+if [ -z "${AZURE_SUBSCRIPTION_ID}" ]; then 
+
+        AZURE_SUBSCRIPTION_ID=$(az account show --query id --output tsv)
+        if [ -z "${AZURE_SUBSCRIPTION_ID}" ]; then  
+            echo "Environment Variable AZURE_SUBSCRIPTION_ID should be set to the Azure Subscription Id to be used with CNAB Bundles" 
+            exit 1
+        else 
+            echo "" >> "${HOME}/.bashrc"
+            echo "START ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+            echo  export AZURE_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}" >> "${HOME}/.bashrc"
+            echo "FINISH ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+            echo "" >> "${HOME}/.bashrc"
+            echo ".bashrc updated added export AZURE_SUBSCRIPTION_ID=\"${AZURE_SUBSCRIPTION_ID}\"  "
+        fi
 fi 
 
-if [ -z "${AZURE_CLIENT_SECRET}" ]; then 
-    echo "Environment Variable AZURE_CLIENT_SECRET should be set to the Azure Service Principal Client Secret to be used with CNAB Bundles" 
-    exit 1
-fi 
-
-# TODO: check if there is a default location in the cli config
+# This is the location that is used to execute ACI Driver
 
 if [ -z "${ACI_LOCATION}" ]; then 
-    echo "Environment Variable ACI_LOCATION should be set to the location to be used by the ACI Driver" 
-    exit 1
+    if [ -z "${ACC_LOCATION}" ]; then 
+        echo "Environment Variable ACI_LOCATION should be set to the location to be used by the ACI Driver" 
+        exit 1
+    else
+        echo "" >> "${HOME}/.bashrc"
+        echo "START ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+        echo  export ACI_LOCATION="${ACC_LOCATION}" >> "${HOME}/.bashrc"
+        echo "FINISH ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+        echo "" >> "${HOME}/.bashrc"
+        echo ".bashrc updated added export ACI_LOCATION=\"${ACC_LOCATION}\"  "
+    fi
 fi 
 
 # Set up Duffle, Porter and Oras 
@@ -98,16 +109,11 @@ tar -zxf "${ORAS_DOWNLOAD_DIR}/oras_0.5.0_linux_amd64.tar.gz" -C "${TOOLHOME}"
 chmod +x "${TOOLHOME}/oras"
 echo Installed "Oras: $("${TOOLHOME}/oras" version)"
 
-DEFAULT_CREDENTIALS_NAME="default-credentials"
-DEFAULT_CREDENTIALS_LOCATION=simongdavies/silver-garbanzo/master
-if [ -z "${DUFFLE_HOME}" ]; then 
-    DUFFLE_HOME="${HOME}/.duffle"
-fi
-
-echo "Creating Default Credentials File from https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}${DEFAULT_CREDENTIALS_NAME}.yaml"
-curl "https://raw.githubusercontent.com/${DEFAULT_CREDENTIALS_LOCATION}/${DEFAULT_CREDENTIALS_NAME}.yaml" -fLo "${DUFFLE_HOME}/credentials/${DEFAULT_CREDENTIALS_NAME}.yaml"
-echo "Created Default Credentials"
-"${TOOLHOME}/duffle" credentials show ${DEFAULT_CREDENTIALS_NAME}
+CNAB_QUICKSTARTS_REPO=simongdavies/silver-garbanzo
+echo "Downloading Script to generate credential and parameter files"
+curl "https://raw.githubusercontent.com/${CNAB_QUICKSTARTS_REPO}/master/client/generate-cnab-param-and-cred-files.sh" -fLo "${TOOLHOME}/generate-cnab-param-and-cred-files.sh"
+chmod +x "${TOOLHOME}/generate-cnab-param-and-cred-files.sh"
+echo "Downlaoded Script"
 
 if [ -f "${HOME}/.bashrc" ]; then
     source "${HOME}/.bashrc"

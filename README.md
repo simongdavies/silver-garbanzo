@@ -1,10 +1,6 @@
-# Azure CNAB Quickstart Bundles
+# Azure CNAB Quickstart 
 
-This repository contains a set of Azure focused CNAB Bundles contributed by the community that can be used to manage applications on Azure. To learn more about CNAB go [here](https://cnab.io/).
-
-## How to install a Bundle
-
-The easiest way to install a Bundle is to use Azure CloudShell, but any CNAB compliant tool can be used to install and manage an application. For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
+This repository contains a set of Azure focused CNAB Packages contributed by the community that can be used to manage applications on Azure. To learn more about CNAB go [here](https://cnab.io/).
 
 ## Repository Structure
 
@@ -14,6 +10,23 @@ The repository contains the source for Azure focused CNAB bundles, each bundle i
 * porter - These bundles are defined and built using [Porter](https://porter.sh/ 'The porter website')
 
 The invocation image for each bundle is stored in an Azure Container Registry at (https://cnabquickstarts.azurecr.io) once the tools support pushing and pulling bundles to OCI registries then the entire bundle will be hosted in the registry
+
+## How to Install a Package
+
+Any CNAB compliant tool can be used to deploy these packages, to make it easy to install without having to download and install any software the following approaches can be used:
+
+### Deploy using the Azure Portal
+
+The easiest way to install a Package is to use the Deploy to Azure button from the README.md for each solution, this will launch the Azure Portal Template deployment experience
+
+### Deploy using PowerShell
+
+The easiest way to install a Bundle is to use Azure CloudShell, but any CNAB compliant tool can be used to install and manage an application. For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
+
+
+## How to Build a Package
+
+
 
 ## Contributing
 
