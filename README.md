@@ -21,7 +21,7 @@ The easiest way to install a Package is to use the Deploy to Azure button from t
 
 ![portal-template-deployment](./images/portal-template-deployment.png)
 
-Packages deployed through the portal run a [Docker Image](./client/duffle-aci-docker) using ACI that in turn runs duffle using the [duffle-aci-driver](https://github.com/deislabs/duffle-aci-driver), these ACI hosted containers are set to run once by using a restart policy o "never'. When the deployment is successfully completed in the portal this signifies that the container has been successfully started, in order to check the progress of the CNAB package deployment you need to access the logs from the container, the easiest way to do this is to navigate to the deployment outputs in the portal and copy the 'CNAB action status command'  
+Packages deployed through the portal run a [Docker Image](./client/duffle-aci-docker) using ACI that in turn runs duffle using the [duffle-aci-driver](https://github.com/deislabs/duffle-aci-driver), these ACI hosted containers are set to run once by using a restart policy o "never'. When the deployment is successfully completed in the portal this signifies that the container has been successfully started, in order to check the progress of the CNAB package deployment you need to access the logs from the container, the easiest way to do this is to navigate to the deployment outputs in the portal and copy the 'CNAB Package Action Logs Command', then open cloud shell and paste the command.
 
 ![portal-template-deployment-outputs](./images/portal-template-deployment-outputs.png)
 
