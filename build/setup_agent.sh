@@ -5,18 +5,21 @@ cnab_quickstart_registry="cnabquickstartstest.azurecr.io"
 build_required=false
 
 function check_required_files() {
+   
+    echo "Validating Files"
 
     # TODO Validate the files
+    # Need to support file existing in the target repo
 
-    if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then 
-        echo "Solution should contain an ARM template to deploy the solution named azuredeploy.json."
-        exit 1
-    fi
+    # if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then   
+    #     echo "Solution should contain an ARM template to deploy the solution named azuredeploy.json."
+    #     exit 1
+    # fi
 
-    if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then 
-        echo "Solution should contain an metadata file named metadata.json."
-        exit 1
-    fi
+    # if [ ! -f  ${repo_local_path}/${tool}/azuredeploy.json ]; then 
+    #     echo "Solution should contain an metadata file named metadata.json."
+    #     exit 1
+    # fi
 
 }
 
@@ -42,7 +45,7 @@ fi
 printf "file:\\n%s\\n" "${files}"
 
 # TODO: Need to handle multiple solution changes
-# TODOL Need to handle changes to build nd client folders
+# TODO: Need to handle changes to build nd client folders
 
 tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)
 
