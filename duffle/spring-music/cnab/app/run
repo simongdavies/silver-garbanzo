@@ -37,7 +37,7 @@ case $action in
         echo $COSMOSDB_CONNECT_STRING
         
         echo "Installing application chart with connection string to Cosmos updated..."
-        helm upgrade --install spring-music /cnab/app/charts/spring-music --set deploy.cosmosConnectString=$COSMOSDB_CONNECT_STRING
+        helm upgrade --install --wait spring-music /cnab/app/charts/spring-music --set deploy.cosmosConnectString=$COSMOSDB_CONNECT_STRING
         
         echo "Your Spring Music demo application is installed!"
 
