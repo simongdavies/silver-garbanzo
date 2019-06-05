@@ -1,2 +1,4 @@
-**/parameters.toml
+**/*parameters*.toml
 **/*credentials*.yaml
+**/bundle.json
+**/azuredeploy.**.parameters.json

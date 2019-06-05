@@ -1,5 +1,3 @@
-*/cnab/app/mixins/*
-*/cnab/app/porter-runtime
-*/Dockerfile
-*/bundle.json
-*/azuredeploy.test.parameters.json
+**/cnab/app/mixins/*
+**/cnab/app/porter-runtime
+**/Dockerfile
