@@ -18,11 +18,12 @@ if [ -z "${AZURE_SUBSCRIPTION_ID}" ]; then
             exit 1
         else 
             echo "" >> "${HOME}/.bashrc"
-            echo "START ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+            echo "#START ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
             echo  export AZURE_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}" >> "${HOME}/.bashrc"
-            echo "FINISH ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+            echo "#FINISH ADDING AZURE_SUBSCRIPTION ID ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
             echo "" >> "${HOME}/.bashrc"
-            echo ".bashrc updated added export AZURE_SUBSCRIPTION_ID=\"${AZURE_SUBSCRIPTION_ID}\"  "
+            echo ".bashrc updated added export AZURE_SUBSCRIPTION_ID=\"${AZURE_SUBSCRIPTION_ID}\""
+            export AZURE_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}" 
         fi
 fi 
 
@@ -34,11 +35,12 @@ if [ -z "${ACI_LOCATION}" ]; then
         exit 1
     else
         echo "" >> "${HOME}/.bashrc"
-        echo "START ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+        echo "#START ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
         echo  export ACI_LOCATION="${ACC_LOCATION}" >> "${HOME}/.bashrc"
-        echo "FINISH ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
+        echo "#FINISH ADDING ACI_LOCATION ENVIRONEMNT VARIABLE FOR ACI DRIVER" >> "${HOME}/.bashrc"
         echo "" >> "${HOME}/.bashrc"
-        echo ".bashrc updated added export ACI_LOCATION=\"${ACC_LOCATION}\"  "
+        echo ".bashrc updated added export ACI_LOCATION=\"${ACC_LOCATION}\""
+        export ACI_LOCATION="${ACC_LOCATION}"
     fi
 fi 
 
@@ -52,15 +54,17 @@ TOOLHOME="${HOME}/bin/cnabquickstarts"
 
 if [ ! -d  "${TOOLHOME}" ]; then 
     mkdir "${TOOLHOME}"  
-    export PATH="${TOOLHOME}:${PATH}"
     if [ -f "${HOME}/.bashrc" ]; then
         echo "" >> "${HOME}/.bashrc"
-        echo  export PATH="${TOOLHOME}:${PATH}" >> "${HOME}/.bashrc"
+        echo "#START UPDATING PATH FOR ACI DRIVER" >> "${HOME}/.bashrc"
+        echo  export PATH="${TOOLHOME}:\$PATH" >> "${HOME}/.bashrc"
+        echo "#FINISH UPDATING PATH FOR ACI DRIVER" >> "${HOME}/.bashrc"
         echo ".bashrc updated to include ${TOOLHOME} in PATH "
     else 
         echo "Update your PATH to include ${TOOLHOME}"
     fi
-fi;
+    export PATH="${TOOLHOME}:${PATH}"
+fi
 
 # Install duffle 
 
@@ -78,7 +82,7 @@ DUFFLE_ACI_DRIVER_REPO=simongdavies/duffle-aci-driver
 echo "Installing duffle-aci-driver (https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-aci-driver-linux-amd64) to ${TOOLHOME}"
 curl "https://github.com/${DUFFLE_ACI_DRIVER_REPO}/releases/download/${DUFFLE_ACI_DRIVER_VERSION}/duffle-aci-driver-linux-amd64" -fLo "${TOOLHOME}/duffle-aci-driver"
 chmod +x "${TOOLHOME}/duffle-aci-driver"
-echo Installed "duffle-aci-driver: $("${TOOLHOME}/duffle-aci-driver" version)"
+echo Installed "duffle-aci-driver"
 
 # Install Porter
  
@@ -113,8 +117,5 @@ CNAB_QUICKSTARTS_REPO=simongdavies/silver-garbanzo
 echo "Downloading Script to generate credential and parameter files"
 curl "https://raw.githubusercontent.com/${CNAB_QUICKSTARTS_REPO}/master/client/generate-cnab-param-and-cred-files.sh" -fLo "${TOOLHOME}/generate-cnab-param-and-cred-files.sh"
 chmod +x "${TOOLHOME}/generate-cnab-param-and-cred-files.sh"
-echo "Downlaoded Script"
-
-if [ -f "${HOME}/.bashrc" ]; then
-    source "${HOME}/.bashrc"
-fi
+echo "Downloaded Script"
+echo "DONE"
