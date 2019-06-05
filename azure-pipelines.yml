@@ -9,8 +9,11 @@ pr:
     include:
     - duffle/*
     - porter/*
+    - client/duffle-aci-docker/**
     exclude:
     - '**/*.md'
+    - client/**
+    - build/**
     
 pool:
   vmImage: 'Ubuntu-16.04'

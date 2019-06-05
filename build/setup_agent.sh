@@ -39,9 +39,10 @@ if [ "${reason}" == "PullRequest" ]; then
     files=$(curl "${pr_uri}"|jq '[.[].filename]') 
 fi
 
-# TODO: Need to handle multiple solution changes
-
 printf "file:\\n%s\\n" "${files}"
+
+# TODO: Need to handle multiple solution changes
+# TODOL Need to handle changes to build nd client folders
 
 tool=$(echo "${files}"|jq 'if . | contains(["/"]) then .|map(select(contains("/")))[0]|split("/")[0]  else empty end' --raw-output)
 
@@ -51,7 +52,7 @@ printf "tool:%s\\n" "${tool}"
 
 # Each bundle definition should exist with a directory under the duffle directory - the folder name is derived from the set of files that have been changed in this pull request
 
-if [ "${tool}" ]; then
+if [[ ! -z "${tool}" ]]; then
     if [ "$(find "${repo_local_path}/${tool}" -maxdepth 1 ! -type d ! -name '.*' ! -name README.md)" ]; then 
         printf "Files should not be placed in the %s directory - only %s solution folders in this folder. \\n" "${tool}" "${tool}"
         exit 1 
