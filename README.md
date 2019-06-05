@@ -17,11 +17,16 @@ Any CNAB compliant tool can be used to deploy these packages, to make it easy to
 
 ### Deploy using the Azure Portal
 
-The easiest way to install a Package is to use the Deploy to Azure button from the README.md for each solution, this will launch the Azure Portal Template deployment experience
+The easiest way to install a Package is to use the Deploy to Azure button from the README for each solution, this will launch the Azure Portal Template deployment experience:
 
-### Deploy using PowerShell
+![portal-template-deployment](./images/portal-template-deployment.png)
 
-The easiest way to install a Bundle is to use Azure CloudShell, but any CNAB compliant tool can be used to install and manage an application. For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
+Packages deployed through the portal run a [Docker Image](./client/duffle-aci-docker) using ACI that in turn runs duffle using the [duffle-aci-driver](https://github.com/deislabs/duffle-aci-driver), these ACI hosted containers are set to run once by using a restart policy o "never'. When the deployment is successfully completed in the portal this signifies that the container has been successfully started, in order to check the progress of the CNAB package deployment you need to access the logs from the container, the easiest way to do this is to navigate to the deployment outputs in the portal and copy the 'az container logs command'  
+
+
+### Deploy using CloudShell
+
+CNAB packages can be deployed using se Azure CloudShell, but any CNAB compliant tool can be used to install and manage an application. For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
 
 
 ## How to Build a Package

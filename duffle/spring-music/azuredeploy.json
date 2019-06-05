@@ -184,7 +184,7 @@
     "outputs": {
         "Get Status using Azure CloudShell": {
             "type": "string",
-            "value": "[concat('az container logs -g ',resourceGroup().name,' -n ',parameters('containerGroupName'),'  --container-name ',parameters('containerName'))]"
+            "value": "[concat('az container logs -g ',resourceGroup().name,' -n ',parameters('containerGroupName'),'  --container-name ',parameters('containerName'), ' --follow')]"
         }
     }
 }
