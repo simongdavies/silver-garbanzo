@@ -182,7 +182,7 @@
         }
     ],
     "outputs": {
-        "Get Status using Azure CloudShell": {
+        "CNAB Package Action Logs Command": {
             "type": "string",
             "value": "[concat('az container logs -g ',resourceGroup().name,' -n ',parameters('containerGroupName'),'  --container-name ',parameters('containerName'), ' --follow')]"
         }
