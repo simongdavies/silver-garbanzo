@@ -123,20 +123,6 @@
                 "description": "The resource group name for the storage account for the CNAB state to be stored in, by default this will be in the current resource group, if this is changed to a different resource group the storage account is expected to already exist"
             },
             "defaultValue": "[resourceGroup().name]"
-        },
-        "aci_user_msi_name": {
-            "type": "string",
-            "metadata": {
-                "description": "This is the name of the user MSI resource that the AI container groups runs as, this needs to have permission to ACI container groups in the resource group used for deployment, to create a storage acount for state in the resource group or to list the keys and create a share for an existing storage account and also needs permissions for all the resources that the CNAB packages use"
-            },
-            "defaultValue": "[concat('cnabmsi',uniqueString(resourceGroup().id))]"
-        },
-        "aci_msi_resource_group": {
-            "type": "string",
-            "metadata": {
-                "description": "The resource group name for the user MSI resource that the AI container groups runs a, by default this will be in the current resource group, if this is changed to a different resource group the user MSI is expected to already exist, otherwise the user MSI will be created if it does not exist and wil be given contributor permission on the resource group"
-            },
-            "defaultValue": "[resourceGroup().name]"
         }
     },
     "variables": {
@@ -165,41 +151,13 @@
             }
         },
         {
-            "condition": "[equals(parameters('aci_msi_resource_group'),resourceGroup().name)]",
-            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "name": "[parameters('aci_user_msi_name')]",
-            "apiVersion": "2018-11-30",
-            "location": "[parameters('location')]"
-        },
-        {
-            "condition": "[equals(parameters('aci_msi_resource_group'),resourceGroup().name)]",
-            "apiVersion": "2017-09-01",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[guid(parameters('aci_user_msi_name'))]",
-            "properties": {
-                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[reference(resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))).principalId]",
-                "scope": "[resourceGroup().id]"
-            },
-            "dependsOn": [
-               
-            ]
-        },
-        {
             "name": "[parameters('containerGroupName')]",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[parameters('cnab_state_storage_account_name')]",
-                "[guid(parameters('aci_user_msi_name'))]"
+                "[parameters('cnab_state_storage_account_name')]"
             ],
-            "identity": {
-                "type": "userAssigned",
-                "userAssignedIdentities": {
-                    "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))]": {}
-                }
-            },
             "properties": {
                 "containers": [{
                     "name": "[parameters('containerName')]",
@@ -274,18 +232,6 @@
                             {
                                 "name": "CNAB_STATE_SHARE_NAME",
                                 "value": "[parameters('cnab_state_share_name')]"
-                            },
-                            {
-                                "name" :"ACI_MSI_TYPE",
-                                "value": "user"
-                            },
-                            {
-                                "name" :"ACI_USER_MSI_RESOURCE_ID",
-                                "value": "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))]"
-                            },
-                            {
-                                "name" :"ACI_RESOURCE_GROUP",
-                                "value": "[parameters('aci_msi_resource_group')]"
                             }
                         ]
                     }
