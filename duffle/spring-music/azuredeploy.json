@@ -29,7 +29,7 @@
             }
         },
         "azure_client_id": {
-            "type": "securestring",  
+            "type": "securestring",
             "metadata": {
                 "description": "The Client ID of an Azure Service Principal that is used for the creation of an AKS Cluster and to run the ACI Instance that installs the package"
             }
@@ -40,7 +40,7 @@
                 "description": "Client SECRET of an Azure Service Principal that is used for the creation of an AKS Cluster and to run the ACI Instance that installs the package"
             }
         },
-        "cluster_name" : {
+        "cluster_name": {
             "type": "string",
             "defaultValue": "spring-music-demo",
             "metadata": {
@@ -61,7 +61,7 @@
                 "description": "The name of the resource group that contains the COSMOSDB Service used for the Application"
             }
         },
-        "cosmosdb_service_name" : {
+        "cosmosdb_service_name": {
             "defaultValue": "springmusicduffle",
             "type": "string",
             "metadata": {
@@ -87,97 +87,211 @@
             "metadata": {
                 "description": "Name for the container group"
             },
-            "defaultValue":"[concat('cg-',uniqueString(resourceGroup().id, newGuid()))]"
+            "defaultValue": "[concat('cg-',uniqueString(resourceGroup().id, newGuid()))]"
         },
         "containerName": {
             "type": "string",
             "metadata": {
                 "description": "Name for the container"
             },
-            "defaultValue":"[concat('cn-',uniqueString(resourceGroup().id, newGuid()))]"
+            "defaultValue": "[concat('cn-',uniqueString(resourceGroup().id, newGuid()))]"
+        },
+        "cnab_state_storage_account_name": {
+            "type": "string",
+            "metadata": {
+                "description": "The storage account name for the account for the CNAB state to be stored in, by default this will be in the current resource group and will be created if it does not exist"
+            },
+            "defaultValue": "[concat('cnabstate',uniqueString(resourceGroup().id))]"
+        },
+        "cnab_state_storage_account_key": {
+            "type": "string",
+            "metadata": {
+                "description": "The storage account key for the account for the CNAB state to be stored in, by default this will be looked up"
+            },
+            "defaultValue": ""
+        },
+        "cnab_state_share_name": {
+            "type": "string",
+            "metadata": {
+                "description": "The file share name in the storage account for the CNAB state to be stored in"
+            },
+            "defaultValue": ""
+        },
+        "cnab_state_storage_account_resource_group": {
+            "type": "string",
+            "metadata": {
+                "description": "The resource group name for the storage account for the CNAB state to be stored in, by default this will be in the current resource group, if this is changed to a different resource group the storage account is expected to already exist"
+            },
+            "defaultValue": "[resourceGroup().name]"
+        },
+        "aci_user_msi_name": {
+            "type": "string",
+            "metadata": {
+                "description": "This is the name of the user MSI resource that the AI container groups runs as, this needs to have permission to ACI container groups in the resource group used for deployment, to create a storage acount for state in the resource group or to list the keys and create a share for an existing storage account and also needs permissions for all the resources that the CNAB packages use"
+            },
+            "defaultValue": "[concat('cnabmsi',uniqueString(resourceGroup().id))]"
+        },
+        "aci_msi_resource_group": {
+            "type": "string",
+            "metadata": {
+                "description": "The resource group name for the user MSI resource that the AI container groups runs a, by default this will be in the current resource group, if this is changed to a different resource group the user MSI is expected to already exist, otherwise the user MSI will be created if it does not exist and wil be given contributor permission on the resource group"
+            },
+            "defaultValue": "[resourceGroup().name]"
         }
     },
     "variables": {
-        "imageName":"cnabquickstartstest.azurecr.io/simongdavies/run-duffle:latest"
+        "imageName": "cnabquickstartstest.azurecr.io/simongdavies/run-duffle:latest"
+       
     },
-    "resources": [
+    "resources": [{
+            "condition": "[equals(parameters('cnab_state_storage_account_resource_group'),resourceGroup().name)]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('cnab_state_storage_account_name')]",
+            "apiVersion": "2019-04-01",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "encryption": {
+                    "keySource": "Microsoft.Storage",
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('aci_msi_resource_group'),resourceGroup().name)]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "name": "[parameters('aci_user_msi_name')]",
+            "apiVersion": "2018-11-30",
+            "location": "[parameters('location')]"
+        },
+        {
+            "condition": "[equals(parameters('aci_msi_resource_group'),resourceGroup().name)]",
+            "apiVersion": "2017-09-01",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "name": "[guid(parameters('aci_user_msi_name'))]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                "principalId": "[reference(resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))).principalId]",
+                "scope": "[resourceGroup().id]"
+            },
+            "dependsOn": [
+               
+            ]
+        },
         {
             "name": "[parameters('containerGroupName')]",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-10-01",
             "location": "[parameters('location')]",
-            "dependsOn": [],
+            "dependsOn": [
+                "[parameters('cnab_state_storage_account_name')]",
+                "[guid(parameters('aci_user_msi_name'))]"
+            ],
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))]": {}
+                }
+            },
             "properties": {
-                "containers": [
-                    {
-                        "name": "[parameters('containerName')]",
-                        "properties": {
-                            "image": "[variables('imageName')]",
-                            "resources": {
-                                "requests": {
-                                  "cpu": "1.0",
-                                  "memoryInGb": "1.5"
-                                }
+                "containers": [{
+                    "name": "[parameters('containerName')]",
+                    "properties": {
+                        "image": "[variables('imageName')]",
+                        "resources": {
+                            "requests": {
+                                "cpu": "1.0",
+                                "memoryInGb": "1.5"
+                            }
+                        },
+                        "environmentVariables": [{
+                                "name": "CNAB_BUNDLE_NAME",
+                                "secureValue": "duffle/spring-music-cnab"
                             },
-                            "environmentVariables": [
-                                {
-                                    "name":"CNAB_BUNDLE_NAME",
-                                    "secureValue": "duffle/spring-music-cnab"    
-                                },   
-                                {
-                                    "name":"AZURE_SUBSCRIPTION_ID",
-                                    "secureValue": "[subscription().subscriptionId]"    
-                                },
-                                {
-                                    "name":"AZURE_TENANT_ID",
-                                    "secureValue": "[subscription().tenantId]"    
-                                },
-                                {
-                                    "name":"AZURE_CLIENT_ID",
-                                    "secureValue": "[parameters('azure_client_id')]"    
-                                },
-                                {
-                                    "name":"AZURE_CLIENT_SECRET",
-                                    "secureValue": "[parameters('azure_client_secret')]"    
-                                },
-                                {
-                                    "name":"CLUSTER_NAME",
-                                    "secureValue": "[parameters('cluster_name')]"    
-                                },
-                                {
-                                    "name":"AKS_RESOURCE_GROUP",
-                                    "secureValue": "[parameters('aks_resource_group')]"    
-                                },
-                                {
-                                    "name":"APP_RESOURCE_GROUP",
-                                    "secureValue": "[parameters('app_resource_group')]"    
-                                },
-                                {
-                                    "name":"COSMOSDB_SERVICE_NAME",
-                                    "secureValue": "[parameters('cosmosdb_service_name')]"    
-                                },
-                                {
-                                    "name":"APP_COSMOSDB_LOCATION",
-                                    "secureValue": "[parameters('location')]"    
-                                },
-                                {
-                                    "name":"CNAB_INSTALLATION_NAME",
-                                    "secureValue": "[parameters('cnab_installation_name')]"    
-                                },
-                                {
-                                    "name":"CNAB_ACTION",
-                                    "secureValue": "[parameters('cnab_action')]"    
-                                },                             
-                                {
-                                    "name":"ACI_LOCATION",
-                                    "secureValue": "[parameters('location')]"    
-                                }
-                            ]
-                        }
+                            {
+                                "name": "AZURE_SUBSCRIPTION_ID",
+                                "secureValue": "[subscription().subscriptionId]"
+                            },
+                            {
+                                "name": "AZURE_TENANT_ID",
+                                "secureValue": "[subscription().tenantId]"
+                            },
+                            {
+                                "name": "AZURE_CLIENT_ID",
+                                "secureValue": "[parameters('azure_client_id')]"
+                            },
+                            {
+                                "name": "AZURE_CLIENT_SECRET",
+                                "secureValue": "[parameters('azure_client_secret')]"
+                            },
+                            {
+                                "name": "CLUSTER_NAME",
+                                "secureValue": "[parameters('cluster_name')]"
+                            },
+                            {
+                                "name": "AKS_RESOURCE_GROUP",
+                                "secureValue": "[parameters('aks_resource_group')]"
+                            },
+                            {
+                                "name": "APP_RESOURCE_GROUP",
+                                "secureValue": "[parameters('app_resource_group')]"
+                            },
+                            {
+                                "name": "COSMOSDB_SERVICE_NAME",
+                                "secureValue": "[parameters('cosmosdb_service_name')]"
+                            },
+                            {
+                                "name": "APP_COSMOSDB_LOCATION",
+                                "secureValue": "[parameters('location')]"
+                            },
+                            {
+                                "name": "CNAB_INSTALLATION_NAME",
+                                "secureValue": "[parameters('cnab_installation_name')]"
+                            },
+                            {
+                                "name": "CNAB_ACTION",
+                                "secureValue": "[parameters('cnab_action')]"
+                            },
+                            {
+                                "name": "ACI_LOCATION",
+                                "secureValue": "[parameters('location')]"
+                            },
+                            {
+                                "name": "CNAB_STATE_STORAGE_ACCOUNT_NAME",
+                                "value": "[parameters('cnab_state_storage_account_name')]"
+                            },
+                            {
+                                "name": "CNAB_STATE_STORAGE_ACCOUNT_KEY",
+                                "value": "[parameters('cnab_state_storage_account_key')]"
+                            },
+                            {
+                                "name": "CNAB_STATE_SHARE_NAME",
+                                "value": "[parameters('cnab_state_share_name')]"
+                            },
+                            {
+                                "name" :"ACI_MSI_TYPE",
+                                "value": "user"
+                            },
+                            {
+                                "name" :"ACI_USER_MSI_RESOURCE_ID",
+                                "value": "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('aci_user_msi_name'))]"
+                            },
+                            {
+                                "name" :"ACI_RESOURCE_GROUP",
+                                "value": "[parameters('aci_msi_resource_group')]"
+                            }
+                        ]
                     }
-                ],
+                }],
                 "osType": "Linux",
-                "restartPolicy":"Never"
+                "restartPolicy": "Never"
             }
         }
     ],
