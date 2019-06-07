@@ -37,14 +37,14 @@ case $action in
         echo $COSMOSDB_CONNECT_STRING
         
         echo "Installing application chart with connection string to Cosmos updated..."
-        helm upgrade --install --wait spring-music /cnab/app/charts/spring-music --set deploy.cosmosConnectString=$COSMOSDB_CONNECT_STRING
+        helm upgrade --install --wait --force spring-music /cnab/app/charts/spring-music --set deploy.cosmosConnectString=$COSMOSDB_CONNECT_STRING
         
         echo "Your Spring Music demo application is installed!"
 
         ;;
     uninstall)
         echo "uninstall action"
-        az group delete -n $APP_RESOURCE_GROUP
+        az group delete -n $APP_RESOURCE_GROUP --yes
         ;;
     upgrade)
         echo "Upgrade action"
@@ -56,6 +56,6 @@ case $action in
     echo "No action for $action"
     ;;
 esac
-echo "Action $action finished for $name at: $(date)"
+echo "Action $action completed for $name at: $(date)"
 elapsed=$((SECONDS-started))
 echo "Duration: $((elapsed/60)) minutes $((elapsed%60)) seconds"

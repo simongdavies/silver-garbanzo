@@ -1,6 +1,6 @@
-# Azure CNAB Quickstart 
+# Azure CNAB Quickstart Packages 
 
-This repository contains a set of Azure focused CNAB Packages contributed by the community that can be used to deploy and manage applications using Azure. To learn more about CNAB go [here](https://cnab.io/).
+This repository contains a set of Azure focused CNAB Packages contributed by the community that can be used to deploy and manage applications using Azure. To learn more about CNAB go [here](https://cnab.io/) or watch [this](https://www.youtube.com/watch?v=r6aqKhvdsRs) video.
 
 ## Repository Structure
 
@@ -25,14 +25,13 @@ Packages deployed through the portal run a [Docker Image](./client/duffle-aci-do
 
 ![portal-template-deployment-outputs](./images/portal-template-deployment-outputs.png)
 
+Once the deployment is complete you can follow whatever instructions the CNAB Package provides to access the application, for example the duffle\spring-music-cnab solution provides the following instructions:
+
 ### Install using Azure CloudShell
 
-CNAB packages can be deployed using se Azure CloudShell, but any CNAB compliant tool can be used to install and manage an application. For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
-
+CNAB packages can also be deployed using Azure CloudShell, when using Azure CloudShell Duffle is required . For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
 
 ## How to Build a Package
-
-
 
 ## Contributing
 

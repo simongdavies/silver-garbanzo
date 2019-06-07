@@ -4,7 +4,7 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "West Europe",
+            "defaultValue": "North Europe",
             "allowedValues": [
                 "West US",
                 "East US",
@@ -127,7 +127,7 @@
     },
     "variables": {
         "imageName": "cnabquickstartstest.azurecr.io/simongdavies/run-duffle:latest"
-       
+
     },
     "resources": [{
             "condition": "[equals(parameters('cnab_state_storage_account_resource_group'),resourceGroup().name)]",
@@ -232,6 +232,10 @@
                             {
                                 "name": "CNAB_STATE_SHARE_NAME",
                                 "value": "[parameters('cnab_state_share_name')]"
+                            },
+                            {
+                                "name": "VERBOSE",
+                                "value": "true"
                             }
                         ]
                     }
