@@ -1,0 +1,52 @@
+trigger:
+ branches:
+  include:
+  - master
+ paths:
+    include:
+    - client/duffle-aci-docker/**
+    exclude:
+    - '**/*.md'
+
+pr:
+ branches:
+  include:
+  - master
+ paths:
+    include:
+    - client/duffle-aci-docker/**
+    exclude:
+    - '**/*.md'
+
+    
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  repository: simongdavies/run-duffle
+  tag: latest
+
+steps:
+- task: Docker@2
+  inputs:
+    command: login
+    containerRegistry: CNABRegistry
+  displayName: 'Docker Registry Login'
+
+- task: Docker@2
+  inputs:
+    command: push
+    containerRegistry: CNABRegistry
+    repository: $(repository)
+    tags: $(tag)
+  condition: succeeded()
+  displayName: 'Docker Build'
+
+- task: Docker@2
+  inputs:
+    command: push
+    containerRegistry: CNABRegistry
+    repository: $(repository)
+    tags: $(tag)
+  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'))
+  displayName: 'Docker Push'
