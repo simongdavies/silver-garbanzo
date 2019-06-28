@@ -4,7 +4,7 @@ trigger:
   - master
  paths:
     include:
-    - client/duffle-aci-docker/**
+    - client/duffle-aci-docker/*
     exclude:
     - '**/*.md'
 
@@ -14,7 +14,7 @@ pr:
   - master
  paths:
     include:
-    - client/duffle-aci-docker/**
+    - client/duffle-aci-docker/*
     exclude:
     - '**/*.md'
 
@@ -48,5 +48,5 @@ steps:
     containerRegistry: CNABRegistry
     repository: $(repository)
     tags: $(tag)
-  condition: and(succeeded(),eq(variables['Build.Reason'], 'IndividualCI'))
+  condition: and(succeeded(),or(eq(variables['Build.Reason'], 'IndividualCI'),eq(variables['Build.Reason'], ''Manual')))
   displayName: 'Docker Push'

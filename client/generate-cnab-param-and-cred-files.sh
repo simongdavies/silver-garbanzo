@@ -77,9 +77,9 @@ for PARAM in ${PARAMETERS};do
   fi
 
   if [[ ${USE_ENV_VAR_AS_SOURCE} = "true" && ! -z ${!VAR:-} ]];  then
-    echo "${PARAM}=\"${!VAR}\"" >> "${PARAM_FILENAME}"
+    echo "${PARAM}=${!VAR}" >> "${PARAM_FILENAME}"
   else
-    echo "${PARAM}=\"${DEFAULTVALUE:-INSERT VALUE HERE}\"" >> "${PARAM_FILENAME}"
+    echo "${PARAM}=${DEFAULTVALUE:-INSERT VALUE HERE}" >> "${PARAM_FILENAME}"
   fi
 done
 
