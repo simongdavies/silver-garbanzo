@@ -7,6 +7,11 @@ DEFAULT_CNAB_STATE_SHARE_NAME=cnabstate
 # All arguments are expected to be in ENV VARS
 # Requires the following arguments plus any parameters/creds for the bundle 
 
+parameterisrequired() {
+    [[ (! $(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("defaultValue")') == true ) || (($(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("required")') == true)  ) && ($(cat bundle.json|jq --arg key "${param}" '.parameters[$key].required'|awk '{ print tolower($0) }') == "true") ]]
+    return
+}
+
 # CNAB_INSTALLATION_NAME
 # CNAB_ACTION
 # CNAB_BUNDLE_NAME The anme os the bundle to install should be in the form of tool/bundlename (e.g porter/{name} or duffle/{name})
@@ -110,17 +115,34 @@ touch params.toml
 
 parameters=$(cat bundle.json|jq '.parameters|keys|.[]' -r)
 
+
 for param in ${parameters};do 
+    
+    # Its expcted that each parameters value is passed in using a correspondingly named variable, in some cases the bundle parameter name will not be a valid environment variable name
+    # e.g. in cases where the parameter names are not defined in the bundle but are injected by the tool (e.g porter-debug)
+    # These will get ignored if there are defaults 
+    
     var=$(echo "${param^^}")
-    if [ -z ${!var:-} ]; then
-        # Only require a value if default values is not set
-        if [ ! $(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("defaultValue")') == true ]; then 
+
+    if [[ ! $param =~ ^[a-zA-Z_]+[a-zA-Z0-9_]*$ ]]; then 
+        if parameterisrequired; then
+            printf "Bundle expects parameter: %s to be set but parameter name translates to illegal env var name: %s\\n" "${param}" "${var}"
+            exit 1
+        fi
+        printf "Parameter %s has illegal ENV variable translation ignoring\\n" "${param}"
+        continue
+    fi
+    
+    if [ -z ${!var:-''} ]; then
+        # Only require a value if parameter is required
+         if parameterisrequired; then 
             printf "Bundle expects parameter: %s to be set using environment variable: %s\\n" "${param}" "${var}"
             exit 1
         fi
     else
         echo "${param}=\"${!var}\"" >> params.toml
     fi
+
 done
 
 # Look credentials in the bundle.json and set them in a credentials file
@@ -152,9 +174,12 @@ DUFFLE_HOME="${HOME}/.duffle"
 # Check if the fileshare exists and if not create it
 
 if [[ ! $(az storage share show --name "${CNAB_STATE_SHARE_NAME}" --account-name "${CNAB_STATE_STORAGE_ACCOUNT_NAME}" --account-key "${CNAB_STATE_STORAGE_ACCOUNT_KEY}" ) ]];then  
+    printf "File Share %s not found in storage account %s Creating...\\n" ${CNAB_STATE_SHARE_NAME} ${CNAB_STATE_STORAGE_ACCOUNT_NAME}
     if [[ ! $(az storage share create --name "${CNAB_STATE_SHARE_NAME}" --account-name "${CNAB_STATE_STORAGE_ACCOUNT_NAME}" --account-key "${CNAB_STATE_STORAGE_ACCOUNT_KEY}") ]];then  
         echo "Failed to create CNAB_STATE_SHARE_NAME ${CNAB_STATE_SHARE_NAME} on CNAB_STATE_STORAGE_ACCOUNT_NAME ${CNAB_STATE_STORAGE_ACCOUNT_NAME}"
         exit 1
+    else
+         printf "File Share %s in storage account %s Created.\\n" ${CNAB_STATE_SHARE_NAME} ${CNAB_STATE_STORAGE_ACCOUNT_NAME}
     fi
 fi
 
