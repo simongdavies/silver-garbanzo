@@ -68,8 +68,20 @@ for PARAM in ${PARAMETERS};do
     DEFAULTVALUE=$(cat ${BUNDLE_FILENAME}|jq --arg key "${PARAM}" '.parameters|.[$key].defaultValue' -r)
   fi
 
-  # Check if there is an ENV Variable with an UPPERCASE name matching the parameter name 
-  if [[ -z ${!VAR:-} && ${HASDEFAULTVALUE} = "false" && ${USE_ENV_VAR_AS_SOURCE} = "true" ]]; then
+  HASREQUIRED=$(cat ${BUNDLE_FILENAME}|jq --arg key "${PARAM}" '.parameters|.[$key]|has("required")')
+  REQUIRED="false"
+  if [[ ${HASREQUIRED} && ($(cat ${BUNDLE_FILENAME}|jq -r --arg key "${PARAM}" '.parameters[$key].required'|awk '{ print tolower($0) }') == "true") ]]; then
+    REQUIRED="true"
+  fi
+
+  TYPE=$(cat ${BUNDLE_FILENAME}|jq -r --arg key "${PARAM}" '.parameters[$key].type'|awk '{ print tolower($0) }')
+  DELIM=""
+  if [ "$TYPE" = "string" ]; then
+    DELIM="'"
+  fi
+
+  # Check if there is an ENV Variable with an UPPERCASE name matching the parameter name and if there is no default value and its a required field emit a warning or exit if validate is set
+  if [[ -z ${!VAR:-} && ${HASDEFAULTVALUE} = "false" && ${REQUIRED} == "true" && ${USE_ENV_VAR_AS_SOURCE} = "true" ]]; then
     printf "Bundle parameter values file expects %s to be set using environment variable: %s\\n" "${PARAM}" "${VAR}"
     if [ ${VALIDATE} = "true" ]; then
       exit 1
@@ -77,9 +89,9 @@ for PARAM in ${PARAMETERS};do
   fi
 
   if [[ ${USE_ENV_VAR_AS_SOURCE} = "true" && ! -z ${!VAR:-} ]];  then
-    echo "${PARAM}=${!VAR}" >> "${PARAM_FILENAME}"
+    echo "${PARAM}=${DELIM}${!VAR}${DELIM}" >> "${PARAM_FILENAME}"
   else
-    echo "${PARAM}=${DEFAULTVALUE:-INSERT VALUE HERE}" >> "${PARAM_FILENAME}"
+    echo "${PARAM}=${DELIM}${DEFAULTVALUE:-INSERT VALUE HERE}${DELIM}" >> "${PARAM_FILENAME}"
   fi
 done
 
