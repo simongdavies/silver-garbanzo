@@ -82,17 +82,21 @@ for PARAM in ${PARAMETERS};do
 
   # Check if there is an ENV Variable with an UPPERCASE name matching the parameter name and if there is no default value and its a required field emit a warning or exit if validate is set
   if [[ -z ${!VAR:-} && ${HASDEFAULTVALUE} = "false" && ${REQUIRED} == "true" && ${USE_ENV_VAR_AS_SOURCE} = "true" ]]; then
-    printf "Bundle parameter values file expects %s to be set using environment variable: %s\\n" "${PARAM}" "${VAR}"
+    printf "Value for parameter %s needs to be set using in file: %s\\n" "${PARAM}" "${PARAM_FILENAME}"
+    echo "${PARAM}='TODO:INSERT VALUE HERE'" >> "${PARAM_FILENAME}"
     if [ ${VALIDATE} = "true" ]; then
       exit 1
     fi
   fi
 
+  if [[ -z ${!VAR:-} && ${HASDEFAULTVALUE} = "true" ]]; then
+    echo "${PARAM}=${DELIM}${DEFAULTVALUE}${DELIM}" >> "${PARAM_FILENAME}"
+  fi 
+
   if [[ ${USE_ENV_VAR_AS_SOURCE} = "true" && ! -z ${!VAR:-} ]];  then
     echo "${PARAM}=${DELIM}${!VAR}${DELIM}" >> "${PARAM_FILENAME}"
-  else
-    echo "${PARAM}=${DELIM}${DEFAULTVALUE:-INSERT VALUE HERE}${DELIM}" >> "${PARAM_FILENAME}"
   fi
+
 done
 
 # Look credentials in the bundle.json and set them in a credentials file
@@ -107,7 +111,7 @@ CREDENTIALS=$(cat ${BUNDLE_FILENAME}|jq '.credentials|keys|.[]' -r)
 for CRED in ${CREDENTIALS}; do
     VAR=$(echo "${CRED}"| awk '{print toupper($0)}')
     if [ -z ${!VAR:-} ]; then
-        printf "Bundle expects credential: %s to be set using environment variable: %s\\n" "${CRED}" "${VAR}"
+        printf "Credential: %s should be set using environment variable: %s\\n" "${CRED}" "${VAR}"
         if [ ${VALIDATE} = true ]; then
           exit 1
         fi
