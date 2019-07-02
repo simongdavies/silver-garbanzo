@@ -8,7 +8,7 @@ DEFAULT_CNAB_STATE_SHARE_NAME=cnabstate
 # Requires the following arguments plus any parameters/creds for the bundle 
 
 parameterisrequired() {
-    [[ (! $(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("defaultValue")') == true ) || (($(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("required")') == true)  ) && ($(cat bundle.json|jq --arg key "${param}" '.parameters[$key].required'|awk '{ print tolower($0) }') == "true") ]]
+    [[ (! $(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("defaultValue")') == true ) || (($(cat bundle.json|jq --arg key "${param}" '.parameters|.[$key]|has("required")') == true)  ) && ($(cat bundle.json|jq -r --arg key "${param}" '.parameters[$key].required'|awk '{ print tolower($0) }') == "true") ]]
     return
 }
 
