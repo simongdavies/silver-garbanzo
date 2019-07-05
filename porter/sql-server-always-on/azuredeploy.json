@@ -43,7 +43,7 @@
 			"type": "string",
 			"defaultValue": "",
 			"metadata": {
-				"description": "The storage account key for the account for the CNAB state to be stored in, by default this will be looked up"
+				"description": "The storage account key for the account for the CNAB state to be stored in, if this is left blank it will be looked up at runtime"
 			}
 		},
 		"cnab_state_storage_account_name": {
@@ -163,6 +163,10 @@
 									"value": "[parameters('location')]"
 								},
 								{
+									"name": "AZURE_SUBSCRIPTION_ID",
+									"value": "[subscription().subscriptionId]"
+								},
+								{
 									"name": "CNAB_STATE_STORAGE_ACCOUNT_NAME",
 									"value": "[parameters('cnab_state_storage_account_name')]"
 								},
@@ -195,10 +199,6 @@
 									"value": "[parameters('location')]"
 								},
 								{
-									"name": "AZURE_CLIENT_ID",
-									"secureValue": "[parameters('azure_client_id')]"
-								},
-								{
 									"name": "AZURE_CLIENT_SECRET",
 									"secureValue": "[parameters('azure_client_secret')]"
 								},
@@ -213,6 +213,10 @@
 								{
 									"name": "SQL_SAPASSWORD",
 									"secureValue": "[parameters('sql_sapassword')]"
+								},
+								{
+									"name": "AZURE_CLIENT_ID",
+									"secureValue": "[parameters('azure_client_id')]"
 								}
 							]
 						}
