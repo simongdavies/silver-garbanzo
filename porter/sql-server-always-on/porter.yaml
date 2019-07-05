@@ -20,6 +20,9 @@ credentials:
 - name: sql_masterkeypassword
   env: SQL_MASTERKEYPASSWORD
   description: The Password for the SQL Server Master Key
+- name: azure_subscription_id
+  env: AZURE_SUBSCRIPTION_ID
+  description: Azure Subscription Id used to set the subscription where the account has access to multiple subscriptions
 
 parameters:
 - name: aks_resource_group
@@ -71,6 +74,13 @@ install:
         - "{{ bundle.credentials.azure_client_secret}}"
         - "--tenant" 
         - "{{ bundle.credentials.azure_tenant_id}}"
+  - exec: 
+      description: "Azure set subscription Id"
+      command: "az"
+      arguments: 
+        - "set" 
+        - "-s"
+        - "{{ bundle.credentials.azure_subscription_id}}"
 
   - exec: 
       description: "Azure CLI AKS get-credentials"
