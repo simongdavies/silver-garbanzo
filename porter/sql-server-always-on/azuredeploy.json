@@ -203,10 +203,6 @@
 									"secureValue": "[parameters('azure_client_secret')]"
 								},
 								{
-									"name": "AZURE_SUBSCRIPTION_ID",
-									"value": "[subscription().subscriptionId]"
-								},
-								{
 									"name": "AZURE_TENANT_ID",
 									"value": "[subscription().tenantId]"
 								},
