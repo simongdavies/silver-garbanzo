@@ -78,6 +78,7 @@ install:
       description: "Azure set subscription Id"
       command: "az"
       arguments: 
+        - "account" 
         - "set" 
         - "-s"
         - "{{ bundle.credentials.azure_subscription_id}}"

@@ -163,10 +163,6 @@
 									"value": "[parameters('location')]"
 								},
 								{
-									"name": "AZURE_SUBSCRIPTION_ID",
-									"value": "[subscription().subscriptionId]"
-								},
-								{
 									"name": "CNAB_STATE_STORAGE_ACCOUNT_NAME",
 									"value": "[parameters('cnab_state_storage_account_name')]"
 								},
