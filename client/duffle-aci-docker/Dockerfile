@@ -13,7 +13,7 @@ ENV DUFFLE_ACI_DRIVER_REPO=simongdavies/duffle-aci-driver
 
 ENV AZCOPY_URL=https://aka.ms/downloadazcopy-v10-linux
 ENV AZCOPY_DOWNLOAD_DIR=/tmp
-ENV AZCOPY_DIR=azcopy_linux_amd64_10.1.2
+ENV AZCOPY_DIR=azcopy_linux_amd64_10.2.1
 
 RUN apk add --update bash py-pip jq curl coreutils  && rm -rf /var/cache/apk/*
 RUN apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make  
