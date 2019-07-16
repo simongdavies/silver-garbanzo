@@ -1,6 +1,6 @@
 name: sql-server-always-on
 version: 0.1.0
-description: "SQL Server Always On on AKS"
+description: "SQL Server Always On on for AKS"
 dockerfile: cnab/app/Dockerfile.base
 invocationImage: cnabquickstartstest.azurecr.io/porter/sql-server-always-on
 
