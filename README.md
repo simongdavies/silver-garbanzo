@@ -29,7 +29,7 @@ Once the deployment is complete you can follow whatever instructions the CNAB Pa
 
 ### Install using Azure CloudShell
 
-CNAB packages can also be deployed using Azure CloudShell, when using Azure CloudShell Duffle is required . For instructions on setting up CloudShell see [this document](set_up_cloudshell.md) 
+CNAB packages can also be deployed using Azure CloudShell, when using Azure CloudShell Duffle is required . For instructions on setting up CloudShell see [this document](client/set_up_cloudshell.md) 
 
 ## How to Build a Package
 
