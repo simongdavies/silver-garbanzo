@@ -1,4 +1,5 @@
 #!/bin/bash
+
 action=$CNAB_ACTION
 echo "Action $action started for $name at: $(date)"
 started=$SECONDS
