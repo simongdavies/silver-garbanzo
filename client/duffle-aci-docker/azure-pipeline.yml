@@ -29,5 +29,5 @@ steps:
     containerRegistry: CNABRegistry
     repository: $(repository)
     tags: $(tag)
-  condition: and(succeeded(),or(eq(variables['Build.Reason'], 'IndividualCI'),eq(variables['Build.Reason'], ''Manual')))
+  condition: and(succeeded(),or(eq(variables['Build.Reason'], 'IndividualCI'),eq(variables['Build.Reason'], 'Manual')))
   displayName: 'Docker Push'
