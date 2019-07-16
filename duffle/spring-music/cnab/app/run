@@ -1,8 +1,7 @@
 #!/bin/bash
-
+action=$CNAB_ACTION
 echo "Action $action started for $name at: $(date)"
 started=$SECONDS
-action=$CNAB_ACTION
 name=$CNAB_INSTALLATION_NAME 
 greeting=${GREETING:-"Hi! let's install the sample Spring Music demo app on Azure"}
 
