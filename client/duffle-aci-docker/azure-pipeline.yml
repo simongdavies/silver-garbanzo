@@ -1,24 +1,5 @@
-trigger:
- branches:
-  include:
-  - master
- paths:
-    include:
-    - client/duffle-aci-docker/*
-    exclude:
-    - '**/*.md'
+# The triggers for this pipeline are defined in Azure Dev Ops Build settings
 
-pr:
- branches:
-  include:
-  - master
- paths:
-    include:
-    - client/duffle-aci-docker/*
-    exclude:
-    - '**/*.md'
-
-    
 pool:
   vmImage: 'Ubuntu-16.04'
 
