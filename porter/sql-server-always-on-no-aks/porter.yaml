@@ -1,0 +1,98 @@
+name: sql-server-always-on-no-aks
+version: 0.1.0
+description: "SQL Server Always On for Kubernetes"
+dockerfile: cnab/app/Dockerfile.base
+invocationImage: cnabquickstartstest.azurecr.io/porter/sql-server-always-on-no-aks
+
+credentials:
+- name: kube_config
+  env: K8SCONFIG
+  description: Base64 encoded Kube config for Kubernetes Mixin
+
+- name: sql_sapassword
+  env: SQL_SAPASSWORD
+  description: The Password for the sa user in SQL Server
+  
+- name: sql_masterkeypassword
+  env: SQL_MASTERKEYPASSWORD
+  description: The Password for the SQL Server Master Key
+
+mixins:
+  - exec
+  - kubernetes
+
+install:
+  - exec: 
+      description: "Decode Kubeconfig"
+      command: "bash"
+      arguments: 
+        - "-c" 
+        - "mkdir -p /root/.kube;echo ${K8SCONFIG}|base64 -d > /root/.kube/config"
+  
+  - kubernetes:
+      description: "Create SQL Operator"
+      manifests:
+        - /cnab/app/manifests/sql-operator.yaml
+      wait: true 
+
+  - exec: 
+      description: "Create Kubernetes Secrets"
+      command: "kubectl"
+      arguments: 
+        - "create" 
+        - "secret" 
+        - "generic"         
+        - "sql-secrets" 
+        - "--from-literal=sapassword={{ bundle.credentials.sql_sapassword }}"
+        - "--from-literal=masterkeypassword={{ bundle.credentials.sql_masterkeypassword }}"
+        - "--namespace" 
+        - "ag1"
+
+  - exec: 
+      description: "Wait for SQL Custom Resource"
+      command: "bash"
+      arguments: 
+        - "-c" 
+        - "crd='';while [[ -z $crd ]];do crd=$(kubectl get crd --field-selector=metadata.name=sqlservers.mssql.microsoft.com --ignore-not-found=true);echo 'Waiting for sql server CRD to be created'; sleep 30;done"
+  
+  - kubernetes:
+      description: "Create SQL Server"
+      manifests:
+        - /cnab/app/manifests/sql-server.yaml
+      wait: true  
+  
+  - kubernetes:
+      description: "Create Kubernetes Services"
+      manifests:
+        - /cnab/app/manifests/ag-services.yaml
+      wait: true  
+    
+uninstall:
+
+  - kubernetes:
+      description: "Delete Kubernetes Services"
+      manifests:
+        - /cnab/app/manifests/ag-services.yaml
+      wait: true  
+
+  - kubernetes:
+      description: "Delete SQL Server"
+      manifests:
+        - /cnab/app/manifests/sql-server.yaml
+      wait: true  
+  
+  - kubernetes:
+      description: "Delete SQL Operator"
+      manifests:
+        - /cnab/app/manifests/sql-operator.yaml
+      wait: true  
+
+  - exec: 
+      description: "Delete Kubernetes Secrets"
+      command: "kubectl"
+      arguments: 
+        - "delete" 
+        - "secret"     
+        - "sql-secrets" 
+        - "--namespace" 
+        - "ag1"
