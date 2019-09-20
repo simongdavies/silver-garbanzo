@@ -23,6 +23,13 @@ mixins:
 
 install:
   - exec: 
+      description: "Say hello world"
+      command: "bash"
+      arguments: 
+        - "-c" 
+        - "echo 'hello world'"
+        
+  - exec: 
       description: "Decode Kubeconfig"
       command: "bash"
       arguments: 
